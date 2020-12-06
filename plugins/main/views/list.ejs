@@ -1,0 +1,44 @@
+<%
+let accepted_items = [];
+for (let i in items) {
+    let cnt = 0;
+    for (let j in items[i].list) {
+        let link = items[i].list[j];
+        if (access.includes(link.access)) {
+            cnt++;
+        }
+    }
+    if (cnt > 0) {
+        accepted_items.push(i);
+    }
+}
+%>
+<div class="content_top__data">
+    <div class="row">
+        <% for (let i in items) { 
+            if (accepted_items.includes(i)) {
+        %>
+        <div class="welcome-layer col-4">
+            <div class="welcome-layer__top">
+                <h2><%=items[i].name%></h2>
+                <i class="<%=items[i].icon%>"></i>
+            </div>
+            <ul>
+                <% for (let j in items[i].list) {
+                    let link = items[i].list[j];
+                    if (access.includes(link.access)) {
+                %>
+                    <li><a href="<%=link.link%>" onclick="Tabs.sameTab('<%=link.link%>');return false;" ><%=link.name%></a></li>
+                <% 
+                    }
+                } 
+                %>
+
+            </ul>
+        </div>
+        <% 
+            }
+        }
+        %>
+    </div>
+</div>

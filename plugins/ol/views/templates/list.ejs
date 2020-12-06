@@ -1,0 +1,51 @@
+<div class="content_top__data">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="text-center" width="40">№</th>
+                <% if (access.includes('ol:editTemplates')) { %>
+                <th class="text-center" width="30"></th>
+                <% } %>  
+                <th class="text-left">Наименование шаблона </th>
+                <% if (access.includes('ol:addTemplates')) { %>
+                <th class="text-center" width="30"></th>
+                <% } %>
+                <% if (access.includes('ol:deleteTemplates')) { %>
+                <th class="text-center" width="30"></th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody class="table__tbody">
+            <% for (let i in items) { %>
+                <%- include('line', {item:items[i]}) %>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var OlTemplates = {
+        copyTemplate(id) {
+            $.get('/ol/templates/copy/'+id, function() {
+                swal({
+                    title: "Отлично!",
+                    text: "Копия шаблона успешно создана!",
+                    type: "success"
+                }, function () {
+                    //location.reload();
+                    Tabs._updateCurrent();
+                });
+            },'json');
+        },
+        deleteTemplate(id) {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить выбранный шаблон?', 'Нет', 'Да, удалить!', function() {
+                $.get('/ol/templates/delete/'+id, function(data){
+                    if (data.ok === true) {
+                        $('.tab-active .templates__list[data-id="'+id+'"]').remove();
+                    }
+                },'json')
+            });
+        }
+    }
+
+</script>

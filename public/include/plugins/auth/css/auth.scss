@@ -1,0 +1,63 @@
+// Обнуление стилей
+@import '../../../css/normalize/normalize.scss';
+// Общие стили
+@import '../../../css/root.scss';
+
+.root {
+    display: block;
+    height: 100%;
+    text-align: center;
+}
+.auth__verticalhelper {
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+}
+.auth__content {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    margin: 70px 0;
+    width: 300px;
+    max-width: 100%;
+    padding: 20px 46px;
+    color: $color;
+    background: $color__bg;
+    @include shadow($form-shadow);
+    // ЛОГО
+    .auth__content-logo {
+        margin: 17px 0 25px;
+        img {
+            max-width: 100%;
+        }
+    }
+    // FORM
+    .auth__content-form {
+        input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid $color__gray;
+            line-height: 2.5em;
+            font-size: 0.9em;
+            &:focus {
+                outline: 0;
+                border-bottom: 1px solid $color__primary;
+            }
+        }
+    }
+    // error
+    .auth__content-error {
+        text-align: left;
+        margin: 25px -46px;
+        font-weight: 700;
+        color: $color__error;
+        background: $color__error-bg;
+        padding: 10px 46px;
+        font-size: 0.8em;
+    }
+}
+a.auth__additional-link {
+    color: #b1b1b1;
+}
+

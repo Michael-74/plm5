@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="/include/js/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/include/plugins/auth/css/auth.min.css">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+    <div class="root">
+        <% if (typeof layout != 'undefined') { %>
+            <%- include('./'+layout, {data:(typeof data != 'undefined' ? data : false)}) %>
+        <% } %>
+    </div>
+</body>
+</html>

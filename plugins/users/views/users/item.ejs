@@ -1,0 +1,54 @@
+<% if (item.id != 1 || cur_user_id == 1) { %>
+<tr class="user__item" data-id="<%= item.id %>">
+    <td class="text-center">
+        <%= item.id %>
+    </td>
+    <% if (access.includes('users:editSettings')) { %>
+    <td class="text-center">
+        <a title="Редактировать пользователя" href="/users/users/<%- (item.type == 1 ? 'editad' : 'edit') %>/<%= item.id %>"  rel="modal:open"><i class="fas fa-pencil-alt"></i></a>
+    </td>
+    <% } %>
+    <td>
+        <div>
+        <% if (item.type == 1) { %>
+        
+        <% } %><%= item.first_name %> <%= item.last_name %>
+        </div>
+        <%- (ad_state[item.email] == 0 ? '<div class="text-danger" style="font-size: 0.9em;">пользователь отключен в AD</div>' : '') %>
+    </td>
+    <td class="text-left">
+        <% 
+            if (item.type == 1) {
+            let splt = item.email.split('@');
+        %>
+            <span title="В качестве пароля используются данные из Active Directory" class="label label-primary">AD</span>
+            <%= splt[0] %>
+
+        <% } else { %>
+            <%= item.email %>
+        <% } %>
+    </td>
+    <td class="text-left">
+        <%
+            let ugroups = [];
+            let user_groups = item.groups.split(',');
+            for (let i in user_groups) {
+                ugroups.push(groups[user_groups[i]]);
+            }
+        %>
+        <%- ugroups.join(', ') %>
+    </td>
+    <% if (access.includes('users:editSettings')) { %>
+    <td class="text-center">
+        <% if (cur_user_id != item.id) { %>
+        <input class="switch-button" type="checkbox" onchange="Settings_Users.changeState(this,'<%= item.id %>');return false;" <% if (item.active == 1) { %>checked="checked"<% } %> />
+        <% } %>
+    </td>
+    <td class="text-center">
+        <% if (cur_user_id != item.id) { %>
+        <a title="Удалить пользователя" href="#" onclick="Settings_Users.deleteUser('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a>
+        <% } %>
+    </td>
+    <% } %>
+</tr>
+<% } %>

@@ -1,0 +1,63 @@
+<div class="modal-header">
+    <h4 class="modal-title text-left"><i class="fal fa-user-edit modal-icon"></i>&nbsp;Редактирование пользователя</h4>
+</div>
+<div class="modal-body">
+    <div class="tabs-container">
+        <form method="POST" action="/users/users/edit/<%=id%>" id="users__edit_form">
+            <div class="form-group">
+                <label>Электронная почта </label>
+                <input class="form-control" name="email" value="<%=user_data.email%>" type="email" required="required">
+                <span class="help-block m-b-none">Например: <i>ifk@crcr.ru</i></span>
+            </div>
+            <div class="form-group">
+                <label>Имя </label>
+                <input class="form-control" name="name" value="<%=user_data.first_name%>" type="text" required="required">
+                <span class="help-block m-b-none">Например: <i>Иван Федорович Крузенштерн</i></span>
+            </div>
+            <div class="form-group">
+                <label>Пароль </label>
+                <input class="form-control" name="password" type="password">
+                <span class="help-block m-b-none">Если не требуется менять пароль, то поле остается пустым</span>
+            </div>
+            <div class="form-group">
+                <label>Роли пользователя</label>
+                <ul class="form_switch-list">
+                    <% for (let i in groups) { %>
+                    <li><input class="switch-button" name="group[]" value="<%=i%>" type="checkbox" <%-(user_groups.includes(parseInt(i)) == true ? 'checked="checked"' : '')%> /> — <%=groups[i]%></li>
+                    <% } %>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                    <button type="submit" class="btn btn-success">Сохранить </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('#users__edit_form').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    success: function(data) {
+                    $.modal.close();
+                    if (data.ok == true) {
+                        swal({
+                            title: "Отлично!",
+                            text: "Пользователь успешно отредактирован!",
+                            type: "success"
+                        }, function () {
+                            Tabs.refreshTab(Tabs._currentTabId());
+                        });
+                    } else {
+                        swal("Опачки!", "Что-то пошло не так :)", "error");
+                    }
+                }
+                });
+            }
+        });
+    });
+</script>

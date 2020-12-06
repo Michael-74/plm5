@@ -1,0 +1,52 @@
+<% 
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%>
+<thead class="table__thead-closed standartizer_edit_thead" data-section="<%= item.id %>">
+    <tr class="text-bold" style="line-height:40px;">
+        <th colspan="3" class="text-left" style="position: relative;padding-left: 20px;">
+            <span class="v__arrow"></span>
+            <span class="table__thead_toggle" onclick="StandartizeEditList.toggleBody(this);return false;"><%-item.levels.join('.')+'.'%>  <%= item.name %></span>
+        </th>
+        <th width="90" class="rsum1"><%- format(item.sum[0], 1, 3, ' ', ',') %></th>
+        <th width="90" class="rsum2"><%- format(item.sum[1], 1, 3, ' ', ',') %></th>
+        <th width="85"></th>
+        <th width="85"></th>
+        <th width="90" class="rsum3 text-right"><%- format(item.sum[2], 2, 3, ' ', ',') %></th>
+        <th width="190"></th>
+    </tr>
+</thead>
+<tbody class="table__tbody table__tbody-closed standartizer_edit_tbody" data-section="<%= item.id %>">
+    <tr class="standartizer_edit_listth">
+        <td width="30">№</td>
+        <td>Наименование операции</td>
+        <td width="90" class="text-center">Кол-во рабочих</td>
+        <td class="text-center">Кол-во || смен (шт)</td>
+        <td class="text-center">чел/смен по операциям</td>
+        <td class="text-center">Cредняя ЗП, руб.</td>
+        <td class="text-center">Длительность смены, час</td>
+        <td class="text-right">Итого ЗП, руб.</td>
+        <td class="text-left">Примечания. Чел/ час.</td>
+    </tr>
+    <%
+        if (item.childs.length > 0) { 
+            for (let j in item.childs) {
+    %>
+        <%- include('edit_cats_inner2', {items:items, item:items[item.childs[j]], data:data, section:item.id, koef:koef}) %>
+    <%
+            }
+        }
+    %>
+    <tr class="standartizer_edit_listitogo">
+        <td colspan="3"></td>
+        <td class="text-center rsum1"><%- format(item.sum[0], 1, 3, ' ', ',') %></td>
+        <td class="text-center rsum2"><%- format(item.sum[1], 1, 3, ' ', ',') %></td>
+        <td colspan="2"></td>
+        <td class="text-right rsum3"><%- format(item.sum[2], 2, 3, ' ', ',') %></td>
+        <td></td>
+    </tr>
+</tbody>

@@ -1,0 +1,10 @@
+<a href="#" onclick="OlSpecs.addParamValue('<%=item.id%>', '<%=section.id%>');return false;" class="btn btn-sm btn-white"><i class="fa fa-plus"></i>&nbsp;добавить значение</a>
+<ul data-id="<%= item.id %>" data-section="values" class="vlues_list">
+    <% for (let n in values) { %>
+    <li data-id="<%-values[n].id%>">
+        <div class="input-group">
+            <input onkeyup="OlSpecs.autoSave.keydown(this);" data-item-id="<%= item.id %>" data-param-id="<%-values[n].id%>" type="text" value="<%-values[n].value%>" name="values[<%-values[n].id%>]" /><span class="input-group-btn"><!--<button type="button" class="btn btn-primary" onclick="OlSpecs.saveParamsValues2('<%-values[n].id%>','<%= item.id %>'); return false;"><i class="fa fa-save"></i></button>--><button type="button" class="btn btn-danger" onclick="OlSpecs.deleteParamValue('<%-values[n].id%>'); return false;"><i class="fas fa-times"></i></button></span>
+        </div>
+    </li>
+    <% } %>
+</ul>

@@ -1,0 +1,109 @@
+<div class="modal-header">
+        <h4 class="modal-title text-left"><i class="fal fa-users-class modal-icon"></i>&nbsp;Добавление бригады</h4>
+    </div>
+    <div class="modal-body">
+        <div class="tabs-container">
+            <form method="POST" action="/workers/brigades/add" id="workers-brigades__add_form">
+
+                <div class="form-group">
+                    <label>Участок</label>
+                    <select name="section_id" class="selectized_input_tpl form-control" required="required">
+                        <% for (let i in sections) { %>
+                            <option value="<%-sections[i].id%>"><%-sections[i].name%></option>
+                        <% } %>
+                    </select>
+                    <span class="help-block">Например: <i>Заготовительный участок</i></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Группа</label>
+                    <select name="group_name" class="selectized_input_pre form-control" required="required">
+                        <% for (let i in pre.groups) { %>
+                        <option value="<%=pre.groups[i]%>"><%=pre.groups[i]%></option>
+                        <% } %>
+                    </select>
+                    <span class="help-block">Например: <i>Группа Металлокаркас (КМ)</i></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Подразделение</label>
+                    <select name="division_name" class="selectized_input_pre form-control" required="required">
+                        <% for (let i in pre.divisions) { %>
+                        <option value="<%=pre.divisions[i]%>"><%=pre.divisions[i]%></option>
+                        <% } %>
+                    </select>
+                    <span class="help-block">Например: <i>заготовительное подразделение</i></span>
+                </div>
+
+                <div class="form-group">
+                    <label>График работы</label>
+                    <select name="work_plan" class="form-control" required="required">
+                        <option value="1">2/2</option>
+                        <option value="2">5-ти дневка (ПН-ПТ)</option>
+                    </select>
+                    <span class="help-block">Например: <i>2/2</i></span>
+                </div>
+    
+                <div class="form-group">
+                    <label>Продолжительность смены, час. </label>
+                    <input type="number" min="1" max="24" value="8" name="work_length" required="required" />
+                    <span class="help-block">Например: <i>8</i></span>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label>Стоимость часа, руб.</label>
+                    <input type="number" step="0.01" min="0" value="0" name="average_payment" required="required">
+                    <span class="help-block">Например: <i>201.73</i></span>
+                </div> -->
+                <input type="hidden" value="0" name="average_payment" />
+
+                <div class="form-group">
+                    <label>Дата начала расчета</label>
+                    <%
+                        let d = new Date();
+                        let date = `${d.getFullYear()}-${(d.getMonth()+1)}-${d.getDate()}`;
+                    %>
+                    <input type="date" name="start_date" value="<%=date%>" required="required" />
+                    <span class="help-block">Например: <i>31.13.3113</i></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                        <button type="submit" class="btn btn-success">Добавить </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        $(function(){
+            $('.selectized_input_tpl').select2();
+            $('.selectized_input_pre').select2({
+                tags: true,
+                selectOnBlur: true
+            });
+
+            $('#workers-brigades__add_form').validate({
+                submitHandler: function(form) {
+                    $(form).ajaxSubmit({
+                        success: function(data) {
+                            $.modal.close();
+                            if (data.ok == true) {
+                                swal({
+                                    title: "Отлично!",
+                                    text: "Новая бригада успешно добавлена!",
+                                    type: "success"
+                                }, function () {
+                                    Tabs.refreshTab(Tabs._currentTabId());
+                                });
+                            } else {
+                                swal("Опачки!", "Что-то пошло не так :)", "error");
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>

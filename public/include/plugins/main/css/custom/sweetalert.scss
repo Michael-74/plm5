@@ -1,0 +1,10 @@
+.sweet-alert {
+    @include border-radius(0px);
+    @include shadow(0 20px 40px rgba(0,0,0,0.4));
+    button {
+        @include border-radius(0px);
+    }
+}
+.sweet-overlay {
+    background-color: rgba(0,0,0,0.22);
+}

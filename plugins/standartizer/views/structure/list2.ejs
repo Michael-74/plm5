@@ -1,0 +1,91 @@
+<div class="content_top__data">
+    <div class="flex-list-col-item nested-flex" group-id="0">
+        <% for (let i in items) { %>
+            <% if (items[i].parent_id == 0) { %>
+                <%- include('item2', {items:items, item:items[i], colors: true}) %>
+            <% } %>
+        <% } %>
+    </div>
+</div>
+<script>
+    var nestedSortables = [].slice.call(document.querySelectorAll('.nested-flex'));
+    // Loop through each nested sortable element
+    for (var i = 0; i < nestedSortables.length; i++) {
+        new Sortable(nestedSortables[i], {
+            handle: '.drag_sortable', // handle's class
+            group: 'nested',
+            animation: 150,
+            fallbackOnBody: true,
+            swapThreshold: 0.65,
+            onSort: function(ev) {
+                var id = parseInt($(ev.item).attr('data-id'));
+                var parent = parseInt($(ev.to).attr('group-id'));
+                var from = parseInt($(ev.from).attr('group-id'));
+                StandartizerStructure.changeParent(id, parent, from);
+                // console.log('item: '+$(ev.item).attr('data-id')+' to: '+$(ev.to).attr('group-id'));
+                // console.log('item: '+$(ev.item).attr('data-id')+' from: '+$(ev.from).attr('group-id')+' to: '+$(ev.to).attr('group-id'));
+                // console.log(this.toArray());
+                var order = this.toArray();
+                StandartizerStructure.reOrder(order.join(','));
+            }
+        });
+    }
+
+    var StandartizerStructure = {
+        deleteSection(id) {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить выбранный раздел?', 'Нет', 'Да, удалить!', function() {
+                $.get('/standartizer/structure/delete/'+id, function(data) {
+                    if (data.ok === true) {
+                        $('.tab-active .flex-list-group[data-id="'+id+'"]').remove();
+                    }
+                },'json')
+            });
+        },
+        reOrder(order) {
+            if (order != '') {
+                $.get('/standartizer/structure/changeorder/'+order, function(data) {
+
+                },'json')
+            }
+        },
+        changeParent(id, parent, from) {
+            if (typeof id != 'undefined' && typeof parent != 'undefined') {
+                $.get('/standartizer/structure/changeparent/'+id+'/'+parent, function(data) {
+                    $('.flex-list-group[data-id="'+id+'"] .flex-list-row-item .standartizer-sku').html(data.levels.join('.')+'.');
+                    StandartizerStructure.checkParent(parent);
+                    StandartizerStructure.checkParent(from);
+                },'json');
+            }
+        },
+        checkParent(id) {
+            var fgrp =  $('.flex-list-group[data-id="'+id+'"]');
+            var els = $('.flex-list-group[data-id="'+id+'"] .flex-list-col-item .flex-list-group');
+            if (els.length > 0) {
+                if (fgrp.hasClass('fulfilled') == false) {
+                    $('.flex-list-group[data-id="'+id+'"]').addClass('fulfilled');
+                }
+            } else {
+                if (fgrp.hasClass('fulfilled') == true) {
+                    $('.flex-list-group[data-id="'+id+'"]').removeClass('fulfilled');
+                }
+            }
+        },
+        toggleList(id) {
+            var group = $('.flex-list-group[data-id="'+id+'"]');
+            var group_container = $('.flex-list-col-item[group-id="'+id+'"]');
+            if (group.hasClass('flex-list-group-opened') == true) {
+                group.removeClass('flex-list-group-opened');
+            } else {
+                group.addClass('flex-list-group-opened');
+            }
+        },
+        closeAllLists() {
+            $('.tab-active .flex-list-group-opened').removeClass('flex-list-group-opened');
+        },
+        changeColor(el, id) {
+            $.post('/standartizer/structure/color/'+id, {color:$(el).val()}, function(data) {
+                Tabs.refreshTab(Tabs._currentTabId());
+            },'json')
+        }
+    }
+</script>

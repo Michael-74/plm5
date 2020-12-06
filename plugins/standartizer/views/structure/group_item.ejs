@@ -1,0 +1,16 @@
+<tr class="standartizer-list_group__item" data-id="<%= item.id %>">
+    <% if (access.includes('standartizer:editGroupStructrue')) { %>
+    <td class="text-center"><a href="/standartizer/structure/edit_group/<%=item.id%>" rel="modal:open"><i class="fas fa-pencil-alt"></i></a></td>
+    <% } %>
+    <td class="text-left"><a href="/standartizer/structure/list/<%= item.id %>" onclick="Tabs.sameTab('/standartizer/structure/list/<%= item.id %>');return false;"><%=item.name%></a></td>
+    <td class="text-left"><%- (typeof users[item.user_id] != 'undefined' ? users[item.user_id].first_name : 'ID: '+item.user_id) %></td>
+    <td class="text-center standartizer-list_group_date"><%-item.date%></td>
+    <% if (access.includes('standartizer:copyGroupStructrue')) { %>
+    <td class="text-center">
+        <a title="Копировать группу операций" href="#" onclick="StandartizeGroupList.copyGroup('<%= item.id %>'); return false;"><i class="far fa-copy"></i></a>
+    </td>
+    <% } %>
+    <% if (access.includes('standartizer:editGroupStructrue')) { %>
+    <td class="text-center"><a title="Удалить группу" href="#" onclick="StandartizeGroupList.deleteItem('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a></td>
+    <% } %>
+</tr>

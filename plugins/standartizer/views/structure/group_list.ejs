@@ -1,0 +1,51 @@
+<div class="content_top__data">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <% if (access.includes('standartizer:editGroupStructrue')) { %>
+                <th width="30" class="text-center"></th>
+                <% } %>
+                <th class="text-left">Наименование</th>
+                <th class="text-left" width="180">Автор</th>
+                <th class="text-center" width="90">Дата</th>
+                <% if (access.includes('standartizer:copyGroupStructrue')) { %>
+                <th class="text-center" width="30"></th>
+                <% } %>
+                <% if (access.includes('standartizer:editGroupStructrue')) { %>
+                <th class="text-center" width="30"></th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody class="table__tbody">
+            <% items.forEach(function(item){ %>
+                <%- include('group_item', {item: item}) %>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+<script>
+    var StandartizeGroupList = {
+        deleteItem(id) {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить выбранную группу операций?', 'Нет', 'Да, удалить!', function() {
+                $.get('/standartizer/structure/delete_group/'+id, function(data) {
+                    if (data.ok === true) {
+                        $('.tab-active .standartizer-list_group__item[data-id="'+id+'"]').remove();
+                    }
+                },'json')
+            });
+        },
+        copyGroup(id) {
+            $.get('/standartizer/structure/copy_group/'+id, function() {
+                swal({
+                    title: "Отлично!",
+                    text: "Копия группы успешно создана!",
+                    type: "success"
+                }, function () {
+                    //location.reload();
+                    Tabs._updateCurrent();
+                });
+            },'json');
+        }
+        
+    }
+</script>

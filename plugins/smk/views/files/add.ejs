@@ -1,0 +1,66 @@
+<div class="modal-header">
+        <h4 class="modal-title text-left">Добавление файла</h4>
+    </div>
+    <div class="modal-body">
+        <div class="tabs-container">
+            <form method="POST" action="/smk/files/add/<%=cat%>" id="smk-files__add_form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Файлы</label>
+                    <input type="file" name="files" required="required" multiple />
+                </div>
+
+                <div class="form-group">
+                    <label>Разделы</label>
+                    <select name="sections" multiple size="6" required="required" style="width: 100%; max-width: 100%;">
+                        <% for (let i in cats) { %>
+                            <% if (cats[i].parent_id == 0) { %>
+                                <%- include('cats_option', {items:cats, item:cats[i], add:'', cat:cat}) %>
+                            <% } %>
+                        <% } %>
+                    </select>
+                    <span class="help-block"><i>Для выбора нескольких значений используйте клавишу <b>CTRL</b>.</i></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                        <button type="submit" class="btn btn-success">Добавить </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        $(function(){
+
+            $('#smk-files__add_form').validate({
+                submitHandler: function(form) {
+                    $(form).ajaxSubmit({
+                        success: function(data) {
+                            $.modal.close();
+                            if (data.ok == true) {
+                                swal({
+                                    title: "Отлично!",
+                                    text: "Файл успешно добавлен!",
+                                    type: "success"
+                                }, function () {
+                                    Tabs.refreshTab(Tabs._currentTabId());
+                                });
+                            } else {
+                                swal("Опачки!", "Что-то пошло не так :)", "error");
+                            }
+                        }
+                    });
+                },
+                rules: {
+                    sections: {
+                        required: true,
+                    },
+                    files: {
+                        required: true,
+                    }
+                }
+            });
+        });
+    </script>

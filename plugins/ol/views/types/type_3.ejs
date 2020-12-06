@@ -1,0 +1,9 @@
+<% 
+    let data = [0, 0.1, 0.01, 0.001, 0.0001, 0.00001];
+%>
+
+<% if (typeof group != 'undefined') { %>
+    <input type="number" onchange="OlEdit.autoSave(this); return false;" name="group_<%=group%>_<%=num%>_<%=section_param.id%>" <%- (params?'value="'+params+'"':'value=""') %> step="<%-data[values[0].value]%>" />
+<% } else { %>
+    <input type="number" onchange="OlEdit.autoSave(this); return false;" name="data_<%=section_param.id%>" <%- (params?'value="'+params+'"':'value=""') %> step="<%-data[values[0].value]%>" />
+<% } %>

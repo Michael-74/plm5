@@ -1,0 +1,76 @@
+<% 
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%> 
+<thead class="table__thead-closed standartizer_edit_thead top_52 standartizer_sub_thead" data-section="<%= item.id %>">
+    <tr class="text-bold" style="line-height:40px;">
+        <th colspan="2" class="text-left" style="border-left: 2px solid <%- (item.color?item.color:'#dddddd') %>;">
+            <span class="v__arrow"></span>
+            <span class="table__thead_toggle" onclick="StandartizeEditList.toggleBody(this);return false;"><%-item.levels.join('.')+'.'%>  <%= item.name %></span>
+        </th>
+        <th width="90" class="text-center">
+            <span class="sum2_workers">
+                <% if (parseFloat(item.allchildsum[0]) > 0) { %>
+                    <%- format(parseFloat(item.allchildsum[0]), 0, 3, ' ', ',') %>
+                <% } %>
+            </span>
+        </th>
+        <th width="145" class="text-center">
+            <span class="sum2_pos1">
+                <% if (parseFloat(item.allchildsum[1]) > 0) { %>
+                    <%- format(parseFloat(item.allchildsum[1]), 2, 3, ' ', ',') %>
+                <% } %>
+            </span>
+            <% if ((parseFloat(item.allchildsum[1]) > 0) && (parseFloat(item.allchildsum[2]) > 0)) { %>&nbsp;|&nbsp;<% } %>
+            <span class="sum2_pos2">
+                <% if (parseFloat(item.allchildsum[2]) > 0) { %>
+                    <%- format(parseFloat(item.allchildsum[2]), 2, 3, ' ', ',') %>
+                <% } %>
+            </span>
+        </th>
+        <th width="130" class="text-center">
+            <span class="sum2_par1">
+                <% if (parseFloat(item.allchildsum[3]) > 0) { %>
+                    <%- format(parseFloat(item.allchildsum[3]), 2, 3, ' ', ',') %>
+                <% } %>
+            </span>
+            <% if ((parseFloat(item.allchildsum[3]) > 0) && (parseFloat(item.allchildsum[4]) > 0)) { %>&nbsp;|&nbsp;<% } %>
+            <span class="sum2_par2">
+                <% if (parseFloat(item.allchildsum[4]) > 0) { %>
+                    <%- format(parseFloat(item.allchildsum[4]), 2, 3, ' ', ',') %>
+                <% } %>
+            </span>
+        </th>
+        <th width="100" class="text-center">
+            <span class="sum2_chsop">
+                <% if (parseFloat(item.allchildsum[6]) > 0) { %>
+                    <%- format(parseFloat(item.allchildsum[5]), 2, 3, ' ', ',') %>
+                <% } %>
+            </span>
+        </th>
+        <th width="125" class="text-right">
+            <nobr>
+                <span class="sum2_group">
+                    <% if (parseFloat(item.allchildsum[6]) > 0) { %>
+                        <%- format(parseFloat(item.allchildsum[6]), 2, 3, ' ', ',') %> руб.
+                    <% } %>
+                </span>
+            </nobr>
+        </th>
+    </tr>
+</thead>
+<tbody class="table__tbody table__tbody-closed standartizer_edit_tbody" data-section="<%= item.id %>">
+    <%
+        if (item.childs.length > 0) { 
+            for (let j in item.childs) {
+    %>
+        <%- include('edit_cats_inner', {items:items, item:items[item.childs[j]], data:data, section:item.id}) %>
+    <%
+            }
+        }
+    %>
+</tbody>

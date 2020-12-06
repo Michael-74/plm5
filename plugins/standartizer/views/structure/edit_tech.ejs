@@ -1,0 +1,57 @@
+<div class="modal-header">
+    <h4 class="modal-title text-left"><i class="fal fa-abacus modal-icon"></i>&nbsp;Редактирование тех. операции</h4>
+</div>
+<div class="modal-body">
+    <div class="tabs-container">
+        <form method="POST" action="/standartizer/structure/edit_tech/<%=id%>" id="standartizer-section__edit_tech_form">
+            <div class="form-group">
+                <label>Номер операции</label>
+                <input type="number" min="0" value="<%=num%>" name="num" required="required" />
+                <span class="help-block">Например: <i>10</i></span>
+            </div>
+
+            <div class="form-group">
+                <label>Наименование операции</label>
+                <input type="text" value="<%=name%>" name="name" required="required" />
+                <span class="help-block">Например: <i>Заготовка листового и прокатного металла</i></span>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('#standartizer-section__edit_tech_form').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    success: function(data) {
+                        $.modal.close();
+                        if (data.ok == true) {
+                            swal({
+                                title: "Отлично!",
+                                text: "Операция успешно отредактирована!",
+                                type: "success"
+                            }, function () {
+                                Tabs.refreshTab(Tabs._currentTabId());
+                            });
+                        } else {
+                            swal("Опачки!", "Что-то пошло не так :)", "error");
+                        }
+                    }
+                });
+            },
+            rules: {
+                name: {
+                    required: true,
+                }
+            }
+        });
+    });
+</script>

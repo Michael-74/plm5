@@ -1,0 +1,26 @@
+<div class="list-group-item smk-structure__item" data-id="<%=item.id%>">
+    <% if (access.includes('smk:editStructrue')) { %>
+        <div class="drag_sortable show_on_hover"></div>
+        <a title="Редактировать раздел" href="/smk/structure/edit/<%=item.id%>" rel="modal:open"><i class="fas fa-pencil-alt"></i></a>
+    <% } %>
+    <span class="nested-name"><%=item.name%></span>
+    <% if (access.includes('smk:editStructrue')) { %>
+        <a class="float-right" title="Удалить раздел" href="#" onclick="SmkStructure.deleteSection('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a>
+    <% } %>
+    <div class="list-group nested-sortable_table" group-id="<%=item.id%>">
+        <%
+        if (item.childs.length > 0) { 
+            for (let j in item.childs) {
+                let citem = items[item.childs[j]];
+        %>
+                <%- include('item', {items:items, item:citem}) %>
+        <%
+            }
+        }
+        %>
+    </div>
+</div>
+
+
+
+

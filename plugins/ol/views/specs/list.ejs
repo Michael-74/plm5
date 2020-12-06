@@ -1,0 +1,104 @@
+<div class="content_top__data">
+    <table class="table table-striped table-hover table-draggable">
+        <thead>
+            <tr>
+                <th width="60" class="text-center">№ </th>
+                <% if (access.includes('ol:editSpecs')) { %>
+                <th width="30" class="text-center"></th>
+                <% } %>
+                <th class="text-left">Наименование характеристики </th>
+                <th class="text-left">Значение </th>
+                <th width="30"></th>
+            </tr>
+        </thead>
+        <tbody class="table__tbody table__tbody_specs" data-section="<%= section.order %>">
+            <% params_data.forEach(function(item) { %>
+                <% if (item.group == 0 || item.type==9) { %>
+                    <%- include('line', {item:item}) %>
+                <% } %>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+<script>
+    dragula([document.querySelector('.table__tbody_specs')], {
+        direction: 'vertical',
+        moves: function (el, container, handle) {
+            return handle.classList.contains('drag_sortable');
+        }
+    }).on('dragend', function(el) {
+        OlSpecs.reSort();
+    });
+
+    var OlSpecs = {
+        reSort() {
+            var sortedIDs = [];
+            var section_order = $('.tab.tab-active .table__tbody_specs').attr('data-section');
+            $('.tab.tab-active .table__tbody_specs tr').each(function( index ) {
+                sortedIDs.push(parseInt($(this).attr('data-id')));
+            });
+            $.get('/ol/specs/resort/'+sortedIDs.join(','));
+            var ii = 1;
+            $('.tab.tab-active .specs__list_order>span').each(function(index) {
+                $(this).html(section_order+'.'+ii+'.');
+                ii++;
+            });
+        },
+        deleteSpec(tid, sid, id) {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить характеристику?', 'Нет', 'Да, удалить!', function() {
+                $.get('/ol/specs/'+tid+'/'+sid+'/delete/'+id, function(data) {
+                    if (data.ok === true) {
+                        $('.tab-active .specs__list[data-id="'+id+'"]').remove();
+                        OlSpecs.reSort();
+                    }
+                },'json')
+            });
+        },
+        saveParamsValues(param_value_id, param_id) {
+            var param_value = $('.tab-active select[data-param-id="'+param_id+'"]').val();
+            
+            $.post('/ol/specs/save/'+param_value_id, {param_value:param_value}, function(data) {
+
+            }, 'json');
+        },
+        saveParamsValues2(param_value_id, param_id) {
+            var param_value = $('.tab-active input[data-param-id="'+param_value_id+'"]').val();
+            $.post('/ol/specs/save/'+param_value_id, {param_value:param_value}, function(data) {
+
+            }, 'json');
+        },
+        addParamValue(param_id, section_id) {
+            $.get('/ol/specs/addparam/'+section_id+'/'+param_id, function(data) {
+                if (data.ok == true) {
+                    $('.tab-active ul.vlues_list[data-id="'+param_id+'"]').append('<li data-id="'+data.id+'"><div class="input-group"><input onkeyup="OlSpecs.autoSave.keydown(this);" data-item-id="'+param_id+'" data-param-id="'+data.id+'" type="text" value="" name="values['+data.id+']" /><span class="input-group-btn"><!--<button type="button" class="btn btn-primary" onclick="OlSpecs.saveParamsValues2(\''+data.id+'\',\''+param_id+'\'); return false;"><i class="fa fa-save"></i></button>--><button type="button" class="btn btn-danger" onclick="OlSpecs.deleteParamValue(\''+data.id+'\'); return false;"><i class="fas fa-times"></i></button></span></div></li>');
+                }
+            }, 'json');
+        },
+        deleteParamValue(param_value_id) {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить значение характеристики?', 'Нет', 'Да, удалить!', function() {
+                $.get('/ol/specs/deleteparam/'+param_value_id, function(data) {
+                    if (data.ok === true) {
+                        $('.tab-active ul.vlues_list li[data-id="'+param_value_id+'"]').remove();
+                    }
+                },'json')
+            });
+        },
+        autoSave: {
+            keydown(e) {
+                var item_id = $(e).attr('data-item-id');
+                var param_id = $(e).attr('data-param-id');
+                OlSpecs.saveParamsValues2(param_id, item_id);
+                // console.log(item_id); 
+                // console.log(param_id); 
+            },
+            change(e) {
+                var data_id = $(e).attr('data-id');
+                var param_id = $(e).attr('data-param-id');
+                OlSpecs.saveParamsValues(data_id, param_id);
+                // console.log(data_id); 
+                // console.log(param_id); 
+            }
+        }
+        
+    }
+</script>

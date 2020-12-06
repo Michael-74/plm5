@@ -1,0 +1,72 @@
+<div class="content_top__data">
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th class="text-center" width="85">Дата</th>
+            <th class="text-center" width="80">Время</th>
+            <th class="text-left">Инициатор</th>
+            <th class="text-left">Событие </th>
+            <% if (access.includes('journal:edit')) { %>
+            <th class="text-center"> </th>
+            <% } %>
+        </tr>
+        </thead>
+        <tbody class="table__tbody journal_body">
+            <% for (let i in items) { %>
+                <%- include('line', {item: items[i], post_data:post_data}) %>
+            <% } %>
+        </tbody>
+    </table>
+    <input type="hidden" name="page" value="2" /> 
+    <div class="text-center">
+        <button class="btn btn-white" onclick="Journal.loadMore();"><i class="fal fa-sync"></i>&nbsp;&nbsp;&nbsp;показать еще...</button>
+    </div>
+</div>
+
+
+<script>
+    var Journal = {
+        done_pages: [],
+        qsync: async.queue(function(task, callback) {
+            $.get('/journal/json', {page: task.page}, function(data) {
+                callback(data);
+            }, 'json');
+        }, 1),
+        clearAll() {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите очистить весь журнал?', 'Нет', 'Да, очистить!', function() {
+                $.get('/journal/clear', function(data){
+                    if (data.ok === true) {
+                        $('.tab-active .journal_body').html('');
+                    }
+                },'json')
+            });
+        },
+        deleteLog(id) {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить выбранное событие?', 'Нет', 'Да, удалить!', function() {
+                $.get('/journal/delete/'+id, function(data){
+                    if (data.ok === true) {
+                        $('.tab-active .journal__list[data-id="'+id+'"]').remove();
+                    }
+                },'json')
+            });
+        },
+        loadMore() {
+            var tbl = $('.tab-active .table__tbody.journal_body');
+            var inp = $('.tab-active input[name="page"]');
+            var page =  inp.val();
+            if (page != 'false' && Journal.done_pages.includes(page) === false) {
+                Journal.qsync.push({page: page}, function(data, err) {
+                    Journal.done_pages.push(page);
+                    var ppg = parseInt(data.data.page)+1;
+                    inp.val(ppg);
+                    tbl.append(data.html);
+                });
+            }
+        }
+    }
+
+    $(function() {
+       
+    });
+    
+</script>

@@ -1,0 +1,22 @@
+<div class="list-group-item standartizer-structure__item" data-id="<%=item.id%>">
+    <% if (access.includes('standartizer:editStructrue')) { %>
+        <div class="drag_sortable show_on_hover"></div>
+        <a title="Редактировать опреацию" href="/standartizer/structure/edit/<%=item.id%>" rel="modal:open"><i class="fas fa-pencil-alt"></i></a>
+    <% } %>
+    <span class="standartizer-sku"><%-item.levels.join('.')+'.'%></span>
+    <span class="nested-name"><%=item.name%></span>
+    <% if (access.includes('standartizer:editStructrue')) { %>
+        <a class="float-right" style="margin-right: 10px;" title="Удалить операцию" href="#" onclick="StandartizerStructure.deleteSection('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a>
+    <% } %>
+    <div class="list-group nested-sortable_table" group-id="<%=item.id%>">
+        <%
+        if (item.childs.length > 0) { 
+            for (let j in item.childs) {
+        %>
+                <%- include('item', {items:items, item:items[item.childs[j]]}) %>
+        <%
+            }
+        }
+        %>
+    </div>
+</div>

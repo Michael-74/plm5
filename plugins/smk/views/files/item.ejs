@@ -1,0 +1,28 @@
+<tr class="smk-file__item" data-id="<%= item.id %>">
+    <td><input type="checkbox" class="check_elements" name="elements" onclick="Tabs.checkElement(this, <%= item.id %>);" /></td>
+    <td class="text-center">
+        <span><%= item.id %></span>
+    </td>
+    <% if (access.includes('smk:editFiles')) { %>
+    <td class="text-center">
+        <a title="Редактировать файл" href="/smk/files/edit/<%=item.id%>" rel="modal:open"><i class="fas fa-pencil-alt"></i></a>
+    </td>
+    <% } %>
+    <td class="text-left">
+        <a href="/smk/files/download/<%=item.id%>"><%=item.name%>.<%=item.format%></a>
+        <% if (item.comment) { %>
+        <div class="smk-file__item__comment"><i><%=item.comment%></i></div>
+        <% } %>
+    </td>
+    <td class="text-center"><%=item.datec%></td>
+    <td class="text-center"><%=item.leng%></td>
+    <td class="text-center">
+        <a href="#" class="<%-(item.pinned == 1 || item.pinned == true ? 'text-info' : 'text-muted')%>" data-pinned="<%-(item.pinned == 1 || item.pinned == true ? 'true' : 'false')%>" onclick="SmkFiles.pin(this, <%= item.id %>);return false;" ><i class="fas fa-thumbtack"></i></a>
+        
+    </td>
+    <% if (access.includes('smk:editFiles')) { %>
+    <td class="text-center">
+        <a title="Удалить файл" href="#" onclick="SmkFiles.deleteFile('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a>
+    </td>
+    <% } %>
+</tr>

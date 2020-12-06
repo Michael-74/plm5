@@ -1,0 +1,5 @@
+<% if (typeof group != 'undefined') { %>
+    <input type="number" onchange="OlEdit.autoSave(this); return false;" name="group_<%=group%>_<%=num%>_<%=section_param.id%>" <%- (params?'value="'+params+'"':'value="1"') %> />
+<% } else { %>
+    <input type="number" onchange="OlEdit.autoSave(this); return false;" name="data_<%=section_param.id%>" <%- (params?'value="'+params+'"':'value="1"') %> />
+<% } %>

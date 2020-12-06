@@ -1,0 +1,56 @@
+<div class="modal-header">
+    <h4 class="modal-title text-left"><i class="fal fa-user-crown modal-icon"></i>&nbsp;Добавление роли</h4>
+</div>
+<div class="modal-body">
+    <div class="tabs-container">
+        <form method="POST" action="/users/groups/add" id="groups__add_form">
+            <div class="form-group">
+                <label>Наименование</label> <input name="name" type="text" class="form-control">
+                <span class="help-block">Например: <i>Администратор</i></span>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                    <button type="submit" class="btn btn-success">Добавить </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('#groups__add_form').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    success: function(data) {
+                        $.modal.close();
+                        if (data.ok === true) {
+                            swal({
+                                title: "Отлично!",
+                                text: "Новая роль создана!",
+                                type: "success"
+                            }, function () {
+                                Tabs._updateCurrent();
+                            });
+                        } else {
+                            swal("Опачки!", "Что-то пошло не так :)", "error");
+                        }
+                    }
+                });
+            },
+            rules: {
+                name: {
+                    required: true,
+                },
+                description: {
+                    required: true
+                }
+            }
+        })
+
+
+
+
+    });
+</script>

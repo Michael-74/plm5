@@ -1,0 +1,46 @@
+<script src="/include/js/fullcalendar/core/main.js"></script>
+<script src="/include/js/fullcalendar/timeline/main.js"></script>
+<script src="/include/js/fullcalendar/resource-common/main.js"></script>
+<script src="/include/js/fullcalendar/resource-timeline/main.js"></script>
+<script src="/include/js/fullcalendar/core/locales/ru.js"></script>
+<script src="/include/js/fullcalendar/interaction/main.js"></script>
+
+<link href="/include/js/fullcalendar/timeline/main.css" rel="stylesheet" />
+<link href="/include/js/fullcalendar/resource-timeline/main.css" rel="stylesheet" />
+
+<div class="content_top__data">
+    <div class="calc_view"></div>
+</div>
+<script>
+    $(function() {
+        var calendarEl = document.querySelector('.calc_view');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+            locale: 'ru',
+            plugins: [ 'resourceTimeline', 'interaction' ],
+            contentHeight: 'auto',
+            header: {
+                left: 'title',
+                center: '',
+                right: 'prev,next'
+            },
+            defaultView: 'resourceTimelineMonth',
+            duration: { days: 30 },
+            resourceAreaWidth: 300,
+            slotLabelFormat: [
+                {  month: 'long', year: 'numeric' },
+                { day: 'numeric' },
+                { weekday: 'short' }
+            ],
+            defaultDate: '<%=defaultDate%>',
+            resourceLabelText: 'Список операций',
+            resources: '/standartizer/list/calc_modal_resources/<%=plan_id%>',
+            events: '/standartizer/list/calc_modal_events_view/<%=plan_id%>',
+            eventOrder: "propOrder",
+            editable: false,
+            droppable: false
+        });
+        calendar.render();
+    });
+</script>

@@ -1,0 +1,18 @@
+<%
+    let num_list = [1,2,3,4,5];
+    let vl_id = 'false';
+    let vl = 'false'; 
+    if (typeof values != 'undefined') {
+        vl_id = values[0].id;
+        vl = values[0].value;
+    }
+%>
+<div>Количество знаков после запятой:
+    <div class="input-group" style="vertical-align: middle;">
+        <select style="border: 1px solid #a9a9a9;" onchange="OlSpecs.autoSave.change(this);" data-id="<%= vl_id %>" data-param-id="<%=item.id%>" data-section="select">
+            <% for (let n in num_list) { %>
+                <option <%- (vl == num_list[n]? 'selected="selected"' : '') %> value="<%-num_list[n]%>"><%-num_list[n]%></option>
+            <% } %>
+        </select><!--<span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="OlSpecs.saveParamsValues('<%= vl_id %>','<%= item.id %>'); return false;"><i class="fa fa-save"></i></button></span>-->
+    </div>
+</div>

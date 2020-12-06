@@ -1,0 +1,63 @@
+<script src="/include/js/fullcalendar/core/main.js"></script>
+<script src="/include/js/fullcalendar/daygrid/main.js"></script>
+<script src="/include/js/fullcalendar/interaction/main.js"></script>
+<script src="/include/js/fullcalendar/core/locales/ru.js"></script>
+
+<div class="modal-header">
+    <h4 class="modal-title text-left"><%=title%></h4>
+</div>
+<div class="modal-body">
+    <div class="tabs-container">
+        <div class="row">
+            <div class="col-12">
+                <div class="month_view view_rest"></div>
+            </div>
+            <div class="col-12">
+                <div class="row line_legend">
+                    <div class="col-6">
+                        <div><span class="line_legend_color bg_light_red"></span> — не рабочие (выходные) дни</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12" style="margin-top: 10px; font-size: 0.9em;">
+                <p>Производственный календарь для планирования отпусков и подсчета рабочих дней. Выделите красным цветом выходные (не рабочие) дни для всего предприятия.</p>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-12 text-right">
+                <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+            </div>  
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        var calendarEl = document.querySelector('.month_view');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            locale: 'ru',
+            height: 440,
+            showNonCurrentDates: false,
+            plugins: [ 'dayGrid' , 'interaction'],
+            editable: true,
+            header: {
+                left: 'title',
+                center: '',
+                right: 'prev,next'
+            },
+            defaultView: 'dayGridMonth',
+            events: '/workers/calendar_rest_json',
+            dateClick: function(data) {
+                $.post('/workers/rest_calendar', {date:data.dateStr}, function(answer) {
+                    if (answer.ok == true) {
+                        calendar.refetchEvents();
+                        // data.dayEl.style.backgroundColor = answer.color;
+                    }
+                }, 'json');
+                // info.dayEl.style.backgroundColor = 'red';
+            }
+        });
+        calendar.render();
+    });
+</script>

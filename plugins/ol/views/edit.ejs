@@ -1,0 +1,302 @@
+<div class="content_top__data">
+<form method="POST" action="/ol/editmain/<%= id %>" id="editol__save_mainform">
+    <table class="table table-striped table-hover table-fixed-with">
+        <thead>
+            <tr>
+                <th width="250" class="text-left">Наименование</th>
+                <th class="text-left">Значение</th>
+            </tr>
+        </thead>
+        <tbody class="table__tbody">
+            <tr>
+                <td>Шаблон опросного листа</td>
+                <td><a href="/ol/sections/<%= template_data.id %>" onclick="Tabs.newTab('/ol/sections/<%= template_data.id %>', 'Шаблон «<%= template_data.name %>»', 'ol');return false;"><%= template_data.name %></a></td>
+            </tr>
+            <tr>
+                <td>№ Станции</td>
+                <td>
+                    <%- (ol_data.num ? ol_data.num : 'б/н') %>&nbsp;&nbsp;
+                    <% if (access.includes('ol:editnumLists') && ol_data.closed == 0) { %>
+                        <a href="/ol/editnum/<%= id %>" rel="modal:open"><i class="fas fa-pencil-alt"></i></a>
+                    <% } %>
+                </td>
+            </tr>
+            <tr>
+                <td>№ Опросного листа</td>
+                <td>
+                    <input type="text" class="ol_num ol-input-control" name="ol_num" value="<%=ol_data.ol_num%>" required="required" />
+                </td>
+            </tr>
+            <tr>
+                <td>Полное наименование в РД</td>
+                <td>
+                    <input type="text" class="ol-input-control" value="<%=ol_data.rd_fullname%>" name="rd_fullname" required="required" />
+                </td>
+            </tr>
+            <tr>
+                <td>Обозначение в РД</td>
+                <td>
+                    <input type="text" class="ol-input-control" value="<%=ol_data.rd_num%>" name="rd_num" required="required" />
+                </td>
+            </tr>
+            <tr>
+                <td>Тип станции</td>
+                <td>
+                    <select name="type" class="selectized_input_pre ol-input-control" required="required">
+                        <% for (let i in pre.types) { %>
+                        <option value="<%=pre.types[i]%>" <%- (pre.types[i] == ol_data.type ? 'selected="selected"' : '') %>><%=pre.types[i]%></option>
+                        <% } %>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Подтип станции (Назначение)</td>
+                <td>
+                    <select name="sub_type" class="selectized_input_pre ol-input-control" required="required">
+                        <% for (let i in pre.subtypes) { %>
+                        <option value="<%=pre.subtypes[i]%>" <%- (pre.subtypes[i] == ol_data.sub_type ? 'selected="selected"' : '') %>><%=pre.subtypes[i]%></option>
+                        <% } %>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Заказчик</td>
+                <td>
+                    <select name="customer" class="selectized_input_pre ol-input-control" required="required">
+                        <% for (let i in pre.customers) { %>
+                        <option <%- (pre.customers[i] == ol_data.customer ? 'selected="selected"' : '') %> value="<%=pre.customers[i]%>"><%=pre.customers[i]%></option>
+                        <% } %>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Категория заказчика</td>
+                <td>
+                    <select name="customer_cat" class="ol-input-control" required="required">
+                        <option value="1" <%- (ol_data.customer_cat == 1 ? 'selected="selected"' : '') %>>1 категория</option>
+                        <option value="2" <%- (ol_data.customer_cat == 2 ? 'selected="selected"' : '') %>>2 категория</option>
+                        <option value="3" <%- (ol_data.customer_cat == 3 ? 'selected="selected"' : '') %>>3 категория</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Место установки станции</td>
+                <td>
+                    <input type="text" class="ol-input-control" name="place" value="<%=ol_data.place%>" />
+                </td>
+            </tr>
+            <tr>
+                <td>Наименование проектного института</td>
+                <td>
+                    <select name="project_inst" class="selectized_input_pre ol-input-control" required="required">
+                        <% for (let i in pre.pro_inst) { %>
+                        <option value="<%=pre.pro_inst[i]%>" <%- (pre.pro_inst[i] == ol_data.project_inst ? 'selected="selected"' : '') %>><%=pre.pro_inst[i]%></option>
+                        <% } %>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Количество частей</td>
+                <td>
+                    <input type="number" value="<%=ol_data.parts%>" min="0" name="parts" required="required" aria-required="true" class="ol-input-control" aria-invalid="false">
+                </td>
+            </tr>
+            <tr>
+                <td>Дополнительные требования</td>
+                <td>
+                    <textarea class="ol-input-control autosize"  sytle="height:inherit; resize:vertical;" name="additional"><%=ol_data.additional%></textarea>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </form>
+    <form method="POST" action="/ol/edit/<%= id %>" id="editol__save_form">
+    <table class="table table-striped table-hover table-ol table-fixed-with">
+        <% sections.forEach(function(section){ %>
+            <thead>
+                <tr class="text-bold" style="line-height:40px;<%-(section.color?'border-bottom: 2px solid '+section.color+';':'')%>">
+                    <th colspan="3" class="text-left"><span class="table__thead_toggle" onclick="OlEdit.toggleBody(this);return false;"><%= section.order %>. <%= section.name %></span></th>
+                </tr>
+            </thead>
+            <tbody class="table__tbody table__tbody-closed">
+                <% sections_data[section.id]['section_params'].forEach(function(section_param) { %>
+                <% if (section_param.group == 0) { %>
+                <tr class="section_params_tr">
+                    <td width="88" class="text-right"><%= section.order %>.<%= section_param.order %>.</td>
+                    <td class="text-left"><%= section_param.name %></td>
+                    <td width="250" class="text-right">
+                        <%- include('types/type_'+section_param.type, {section_param: section_param, values: sections_data[section.id]['params_values'][section_param.id],params:ol_data.params[section_param.id]}) %>
+                    </td>
+                </tr>
+                <% } else if (section_param.group == 1) { %>
+                    <tr class="section_params_tr tr_group_<%=section_param.id%>">
+                        <td width="88" class="text-right"><nobr><%= section.order %>.<%= section_param.order %>.</nobr></td>
+                        <td class="text-left"><%= section_param.name %></td>
+                        <td width="250" class="text-right">
+                            <a href="#" class="btn btn-sm btn-white" onclick="OlEdit.addGroupData('<%=section.id%>', '<%= id %>','<%=section_param.id%>', '<%= section_param.order %>'); return false;"><i class="fa fa-plus"></i>&nbsp;добавить набор характеристик</a>
+                        </td>
+                    </tr>
+                    <% if (typeof ol_data.params.group != 'undefined') { %>
+                        <% if (typeof ol_data.params.group[section_param.id] != 'undefined') { %>
+                            <% 
+                            let nsize = Object.keys(ol_data.params.group[section_param.id][0]).length;
+                            for (let ii = 0; ii < ol_data.params.group[section_param.id].length; ii++) {
+                                %>
+                                <% sections_data[section.id]['section_params'].forEach(function(section_param2) { %>
+                                    <% if (section_param2.group == section_param.id) { %>
+                                        <tr class="section_params_tr section_params_tr_group" data-groupid="<%=section_param.id%>" data-num="<%-(ii+1)%>">
+                                            <td width="88" class="text-right"><nobr><%= section.order %>.<%= section_param.order %>.<%-(ii+1)%>.<%- (nsize > 1 ? section_param2.order+'.' : '') %></nobr></td>
+                                            <td class="text-left"><%= section_param2.name %></td>
+                                            <td width="250" class="text-right">
+                                                <%-
+                                                    include('types/type_'+section_param2.type, {
+                                                        section_param: section_param2,
+                                                        values: sections_data[section.id]['params_values'][section_param2.id],
+                                                        params: (ol_data.params.group[section_param2.group][ii] != null ? (typeof ol_data.params.group[section_param2.group][ii][section_param2.id] != 'undefined' ? ol_data.params.group[section_param2.group][ii][section_param2.id] : false) : false),
+                                                        group:section_param2.group,num:(ii+1)
+                                                    })
+                                                %>
+                                                
+                                            </td>
+                                        </tr>
+                                    <% } %>
+                                <% }) %>
+                            <% 
+                            } %>
+                        <% } %>
+                    <% } %>
+                    <tr class="tr_group_underliner" data-group="<%=section_param.id%>" style="display:none;"><td colspan="3"></td></tr>
+                <% } %>
+                <% }) %>
+            </tbody>
+        <% }) %>
+        <thead style="display: none;">
+            <tr class="text-bold" style="line-height:40px;">
+                <th colspan="2" class="text-left"><span class="table__thead_toggle" onclick="OlEdit.toggleBody(this);return false;">Приложения к опросному листу</span></th>
+                <th width="250" class="text-right">
+                    <a href="#" class="btn btn-sm btn-white" onclick="OlEdit.addAttachment('<%= id %>'); return false;"><i class="fal fa-paperclip"></i>&nbsp;добавить приложение</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="table__tbody table__tbody-closed" style="display: none;">
+            <tr>
+                <td colspan="3"></td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+</div>
+
+<script>
+    $(function(){
+        autosize($('textarea.autosize'));
+        var year = new Date().getFullYear();
+        $('.selectized_input_tpl').select2();
+        $('.selectized_input_pre').select2({
+            tags: true,
+            selectOnBlur: true
+        });
+        $('.tab-active #editol__save_form').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    success: function(data) {
+                        if (data.ok === true) {
+                            DSH.showInfo('Сохранение','Данные опросного листа успешно сохранены!');
+                            // swal({
+                            //     title: "Отлично!",
+                            //     text: "Данные успешно сохранены!",
+                            //     type: "success"
+                            // }, function () {
+                            //     // Tabs._updateCurrent();
+                            // });
+                        } else {
+                            swal("Опачки!", "Что-то пошло не так :)", "error");
+                        }
+                    }
+                });
+            }
+        })
+        $('.tab-active #editol__save_mainform').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    success: function(data) {
+                        if (data.ok === true) {
+                            DSH.showInfo('Сохранение','Данные опросного листа успешно сохранены!');
+                            // swal({
+                            //     title: "Отлично!",
+                            //     text: "Данные успешно сохранены!",
+                            //     type: "success"
+                            // }, function () {
+                            //     // Tabs._updateCurrent();
+                            // });
+                        } else {
+                            swal("Опачки!", "Что-то пошло не так :)", "error");
+                        }
+                    }
+                });
+            }
+        })
+        $.jMaskGlobals = {
+            maskElements: 'input,td,span,div',
+            dataMaskAttr: '*[data-mask]',
+            dataMask: true,
+            watchInterval: 300,
+            watchInputs: true,
+            watchDataMask: false,
+            byPassKeys: [9, 16, 17, 18, 36, 37, 38, 39, 40, 91],
+            translation: {
+                '#': {pattern: /\d/, recursive: true},
+            }
+        };
+        $('.ol_num').mask('ОЛ 20##/#####', {
+            translation: {
+                '#': {
+                    pattern: /[0-9*]/
+                }
+            },
+            placeholder: 'ОЛ '+year+'/_____'
+        });
+    });
+    var OlEdit = {
+        submitForm() {
+            $('.tab-active #editol__save_form').submit();
+        },
+        submitMainForm() {
+            $('.tab-active #editol__save_mainform').submit();
+        },
+        addGroupData(sec_id, id, group_id, po) {
+            let max_num = 0;
+            $('.section_params_tr_group[data-groupid="'+group_id+'"]').each(function( index ) {
+                let num = parseInt($(this).attr('data-num'));
+                if (num > max_num) max_num = num;
+            });
+            let nextnum =  parseInt(max_num)+1;
+            $.get('/ol/group/'+sec_id+'/'+id+'/'+group_id+'/'+po+'/'+nextnum, function(data) {
+                if (data.ok == true) {
+                    $('.tab-active .tr_group_underliner[data-group="'+group_id+'"]').before(data.html);
+                    autosize($('textarea.autosize'));
+                }
+            }, 'json');
+        },
+        addAttachment(id) {
+            console.log(id);
+        },
+        autoSave(e) {
+            $('.tab-active #editol__save_form').submit();
+        },
+        textareaResize(e) {
+            if(e.scrollTop > 0){
+                e.style.height = e.scrollHeight + 5 + "px";
+            }
+        },
+        toggleBody(e) {
+            var tbody = $(e).closest('thead').next();
+            if (tbody.hasClass('table__tbody-closed') == true) {
+                tbody.removeClass('table__tbody-closed');
+            } else {
+                tbody.addClass('table__tbody-closed');
+            }
+            autosize.update($('textarea.autosize'));
+        }
+    }
+</script>

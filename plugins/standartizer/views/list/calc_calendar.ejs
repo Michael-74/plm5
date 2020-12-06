@@ -1,0 +1,92 @@
+<script src="/include/js/fullcalendar/core/main.js"></script>
+<script src="/include/js/fullcalendar/timeline/main.js"></script>
+<script src="/include/js/fullcalendar/resource-common/main.js"></script>
+<script src="/include/js/fullcalendar/resource-timeline/main.js"></script>
+<script src="/include/js/fullcalendar/core/locales/ru.js"></script>
+<script src="/include/js/fullcalendar/interaction/main.js"></script>
+
+<link href="/include/js/fullcalendar/timeline/main.css" rel="stylesheet" />
+<link href="/include/js/fullcalendar/resource-timeline/main.css" rel="stylesheet" />
+
+<div class="content_top__data">
+    <div class="calc_view"></div>
+</div>
+<script>
+    var ndata = {}
+    $(function() {
+        var calendarEl = document.querySelector('.calc_view');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+            locale: 'ru',
+            plugins: [ 'resourceTimeline', 'interaction' ],
+            contentHeight: 'auto',
+            header: {
+                left: 'title',
+                center: '',
+                right: 'prev,next'
+            },
+            defaultView: 'resourceTimelineMonth',
+            // defaultView: 'resourceTimeline',
+            duration: { days: 30 },
+            resourceAreaWidth: 300,
+            slotLabelFormat: [
+                {  month: 'long', year: 'numeric' },
+                { day: 'numeric' },
+                { weekday: 'short' }
+            ],
+            // visibleRange: {
+            //     start: '2020-03-22',
+            //     end: '2020-03-25'
+            // },
+            defaultDate: '<%=defaultDate%>',
+            resourceLabelText: 'Список операций',
+            resources: '/standartizer/list/calc_modal_resources/<%=plan_id%>',
+            events: '/standartizer/list/calc_modal_events/<%=plan_id%>',
+            eventOrder: "propOrder",
+            editable: true,
+            droppable: true,
+            // eventMouseEnter: function(info) {
+            //     let el = info.el
+            //     el.style.cursor = 'pointer'
+            // },
+            eventClick: function(info) {
+                let id = info.event.id
+                if (id !== '') {
+                    $('<a href="/standartizer/list/calc_modal_event_change/<%=plan_id%>/'+id.split('_')[0]+'/'+id.split('_')[1]+'/'+info.event.start+'"/>').modal()
+                }
+            },
+            eventDragStart: function(info) {
+                let id = info.event.id
+                ndata[id] = info.event.start
+            },
+            eventDrop: function(info) {
+                let id = info.event.id
+                $.post(
+                    '/standartizer/list/calc_modal_event_change_drop/<%=plan_id%>',
+                    {
+                        station_id: id.split('_')[0],
+                        operation_id: id.split('_')[1],
+                        date: ndata[id], 
+                        target_date: info.event.start, 
+                    }, 
+                    function(data) {
+                        if (data.ok == true) {
+                            Tabs.refreshTab(Tabs._currentTabId());
+                        } else {
+                            swal("Опачки!", "Что-то пошло не так :)", "error");
+                        }
+                    }, "json"
+                )
+            }
+        });
+        calendar.render();
+
+    });
+
+    var Standartizer_calc = {
+        saveChanges() {
+
+        }
+    }
+</script>

@@ -1,0 +1,84 @@
+<% 
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%>
+<tr class="section_params_tr<%-(item.childs.length == 0 ? ' fullfilled' : '')%>" data-id="<%-item.id%>" data-childs="<%-item.allchilds.join('_')%>">
+        <%
+        let nbsp_num = '';
+        if (item.levels.length > 2) {
+            let cnt = item.levels.length - 2;
+            for (let i = 0; i < cnt; i++) {
+                nbsp_num += '&nbsp;&nbsp;&nbsp;';
+            }
+        }
+        %>
+        <td class="text-left standartizer_list_num_td"><nobr><%-item.levels.join('.')+'.'%></nobr></td>
+        <td class="text-left"><%- nbsp_num %><%= item.name %></td>
+        <td class="text-center">
+            <% if (item.childs.length == 0) { %>
+            <input onchange="StandartizeEditList.recalcSum2();" data-type="1" type="number" step="1" min="0" value="<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val1 : '' )%>" name="val_<%-item.id%>_1" />
+            <% } %>
+        </td>
+        <td class="text-center">
+            <% if (item.childs.length == 0) { %>
+            <input onchange="StandartizeEditList.recalcSum2();" data-type="2" type="number" step="0.1" min="0" value="<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val2 : '' )%>" name="val_<%-item.id%>_2" />
+            <% } else { %>
+                <%- format(item.sum[0], 1, 3, ' ', ',') %>
+            <% } %>
+        </td> 
+        <td class="text-center">
+            <%
+                if (item.childs.length == 0) { 
+                    let val1 = parseInt((data != null && typeof data[item.id] != 'undefined' ? data[item.id].val1 : 0 ));
+                    let val2 = parseFloat((data != null && typeof data[item.id] != 'undefined' ? data[item.id].val2 : 0 ));
+                    let sum1 = val1 * val2;
+            %>
+                <span class="sum1"><%- format(sum1, 1, 3, ' ', ',') %></span>
+                <% } else { %>
+                    <%- format(item.sum[1], 1, 3, ' ', ',') %>
+                <% } %>
+        </td>
+        <td class="text-center">
+            <% if (item.childs.length == 0) { %>
+            <input onchange="StandartizeEditList.recalcSum2();" data-type="3" type="number" step="0.01" min="0" value="<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val3 : '' )%>" name="val_<%-item.id%>_3" />
+            <% } %>
+        </td>
+        <td class="text-center">
+            <% if (item.childs.length == 0) { %>
+            <input onchange="StandartizeEditList.recalcSum2();" data-type="4" type="number" step="1" min="0" max="24" value="<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val4 : '' )%>" name="val_<%-item.id%>_4" />
+            <% } %>
+        </td>
+        <td class="text-right">
+            <% 
+            if (item.childs.length == 0) {
+                let val1 = parseInt((data != null && typeof data[item.id] != 'undefined' ? data[item.id].val1 : 0 ));
+                let val2 = parseFloat((data != null && typeof data[item.id] != 'undefined' ? data[item.id].val2 : 0 ));
+                let sum1 = val1 * val2;
+                let val3 = parseFloat((data != null && typeof data[item.id] != 'undefined' ? data[item.id].val3 : 0 ));
+                let val4 = parseInt((data != null && typeof data[item.id] != 'undefined' ? data[item.id].val4 : 0 ));
+                let sum2 = sum1 * val3 * val4 * parseFloat(koef);    
+            %>
+            <nobr><span class="sum2"><%- format(sum2, 2, 3, ' ', ',') %></span></nobr>
+            <% } else { %>
+                <%- format(item.sum[2], 2, 3, ' ', ',') %>
+            <% } %>
+        </td>
+        <td class="text-left">
+            <% if (item.childs.length == 0) { %>
+            <input data-type="5" type="text" name="val_<%-item.id%>_5" value="<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val5 : '' )%>" />
+            <% } %>
+        </td>
+    </tr>
+    <%
+        if (item.childs.length > 0) { 
+            for (let j in item.childs) {
+    %>
+        <%- include('edit_cats_inner2', {items:items, item:items[item.childs[j]], section:section, koef:koef}) %>
+    <%
+            }
+        }
+    %>

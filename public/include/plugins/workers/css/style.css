@@ -1,0 +1,17 @@
+.workers_brigades_th {
+  line-height: 40px;
+}
+
+.month_view {
+  width: 440px;
+}
+
+.month_view.view_rest .fc-day:not(.fc-disabled-day) {
+  cursor: pointer;
+}
+
+.fc-highlight {
+  background: #000000;
+  opacity: 0.3;
+}
+/*# sourceMappingURL=style.css.map */

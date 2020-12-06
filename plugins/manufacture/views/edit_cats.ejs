@@ -1,0 +1,53 @@
+<% 
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%>
+
+<thead class="table__thead-closed standartizer_edit_thead top_37 standartizer_sub_thead" data-section="<%= item.id %>">
+    <tr class="text-bold" style="line-height:40px;">
+        <th colspan="2" class="text-left" style="border-left: 2px solid <%- (item.color?item.color:'#dddddd') %>;">
+            <span class="v__arrow"></span>
+            <span class="table__thead_toggle" onclick="ManufactureEditList.toggleBody(this);return false;"><%-item.levels.join('.')+'.'%>  <%= item.name %></span>
+        </th>
+        <th class="text-center">
+            <span class="sum2_workers">
+                <% if (parseFloat(item.allchildsum[0]) > 0) { %>
+                    <%- format(parseFloat(item.allchildsum[0]), 0, 3, ' ', ',') %>
+                <% } %>
+            </span>
+        </th>
+        <th class="text-center">
+            
+        </th>
+        <th class="text-center">
+            
+        </th>
+        <th class="text-center">
+            
+        </th>
+        <th class="text-center">
+            
+        </th>
+        <th class="text-center">
+            
+        </th>
+        <th width="100" class="text-center">
+            
+        </th>
+    </tr>
+</thead>
+<tbody class="table__tbody table__tbody-closed standartizer_edit_tbody" data-section="<%= item.id %>">
+    <%
+        if (item.childs.length > 0) {
+            for (let j in item.childs) {
+    %>
+        <%- include('edit_cats_inner', {calcops:calcops, done:done, done_hours:done_hours, station_id: station_id, operation_sum: operation_sum, items:items, item:items[item.childs[j]], data:data}) %>
+    <%
+            }
+        }
+    %>
+</tbody>

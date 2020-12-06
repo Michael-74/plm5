@@ -1,0 +1,81 @@
+<div class="content_top__data">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <% if (access.includes('ol:viewList')) { %>
+                    <th class="text-center" width="50"></th>
+                <% } %>
+                <% if (access.includes('ol:editLists')) { %>
+                    <th class="text-center" width="30"></th>
+                <% } %>
+                <th class="text-center" width="90">№ станции</th>
+                <th class="text-left" width="100">№ ОЛ</th>
+                <th class="text-left">Обозначение в РД</th>
+                <th class="text-left">Тип станции</th>
+                <th class="text-left">Заказчик</th>
+                <th class="text-left">Автор</th>
+                <th class="text-center" width="30"></th>
+                <% if (access.includes('ol:deleteLists')) { %>
+                <th class="text-center" width="30"></th>
+                <% } %>
+                <% if (access.includes('ol:editLists')) { %>
+                <th width="30"></th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody class="table__tbody ol_body">
+            <% for (let i in items) { %>
+                <%- include('line2', {item:items[i]}) %>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+<script>
+    var Olist = {
+        done_pages: [],
+        qsync: async.queue(function(task, callback) {
+            $.get('/ol/json', {page: task.page}, function(data) {
+                callback(data);
+            }, 'json');
+        }, 1),
+        deleteOL(id) {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить выбранный опросный лист?', 'Нет', 'Да, удалить!', function() {
+                $.get('/ol/delete/'+id, function(data){
+                    if (data.ok === true) {
+                        $('.tab-active .ol__list[data-id="'+id+'"]').remove();
+                    }
+                },'json')
+            });
+        },
+        closeList(id, state) {
+            $.get('/ol/close/'+id+'/'+state, function() {
+                Tabs._updateCurrent();
+            }, 'json');
+        },
+        copyList(id) {
+            $.get('/ol/copy/'+id, function() {
+                swal({
+                    title: "Отлично!",
+                    text: "Копия опросного листа успешно создана!",
+                    type: "success"
+                }, function () {
+                    //location.reload();
+                    Tabs._updateCurrent();
+                });
+            },'json');
+        },
+        loadMore() {
+            var tbl = $('.tab-active .table__tbody.ol_body');
+            var inp = $('.tab-active input[name="page"]');
+            var page =  inp.val();
+            if (page != 'false' && Olist.done_pages.includes(page) === false) {
+                Olist.qsync.push({page: page}, function(data, err) {
+                    Olist.done_pages.push(page);
+                    var ppg = parseInt(data.data.page)+1;
+                    inp.val(ppg);
+                    tbl.append(data.html);
+                });
+            }
+        }
+    }
+</script>

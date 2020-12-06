@@ -1,0 +1,64 @@
+<form method="POST" action="/ol/specs/<%=tid%>/<%=id%>/add" id="specs__add_form">
+    <input type="hidden" value="<%=group_id%>" name="group_id" />
+    <div class="modal-header">
+        <h3 class="modal-title text-left"><i class="fal fa-tasks modal-icon"></i>&nbsp;&nbsp;Добавление характеристики</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Наименование</label> <input name="name" type="text"  class="form-control">
+            <span class="help-block">Например: <i>Степень огнестойкости</i></span>
+        </div>
+        <div class="form-group">
+            <label>Тип</label>
+            <select name="type" class="form-control">
+                <option value="1">Текстовое значение</option>
+                <option value="2">Целое число</option>
+                <option value="3">Число с плавающей запятой</option>
+                <option value="4">Переключатель (да/нет)</option>
+                <option value="5">Дата</option>
+                <option value="6">Список значений</option>
+                <option value="7">Габариты (В х Ш х Г)</option>
+                <option value="8">Процент (0 - 100) %</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+        <button type="submit" class="btn btn-success">Добавить</button>
+    </div>
+</form>
+
+<script>
+$(function(){
+    $('#specs__add_form').validate({
+        submitHandler: function(form) {
+            $(form).ajaxSubmit({
+                success: function(data) {
+                    $.modal.close();
+                    if (data.ok === true) {
+                        swal({
+                            title: "Отлично!",
+                            text: "Новая характеристика добавлена!",
+                            type: "success"
+                        }, function () {
+                            Tabs._updateCurrent('', function() {
+                                OlSpecs.reSort();
+                            });
+                        });
+                    } else {
+                        swal("Опачки!", "Что-то пошло не так :)", "error");
+                    }
+                }
+            });
+        },
+        rules: {
+            name: {
+                required: true,
+            },
+            type: {
+                required: true,
+            }
+        }
+    })
+});
+</script>

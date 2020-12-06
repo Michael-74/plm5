@@ -1,0 +1,49 @@
+<form method="POST" action="/ol/specs/<%=tid%>/<%=id%>/addgroup" id="specs__addgroup_form">
+    <div class="modal-header">
+        <h3 class="modal-title text-left"><i class="fal fa-tasks modal-icon"></i>&nbsp;&nbsp;Добавление группы</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Наименование</label> <input name="name" type="text"  class="form-control">
+            <span class="help-block">Например: <i>Датчики</i></span>
+        </div>
+        <input type="hidden" name="type" value="9" />
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+        <button type="submit" class="btn btn-success">Добавить</button>
+    </div>
+</form>
+
+<script>
+$(function(){
+    $('#specs__addgroup_form').validate({
+        submitHandler: function(form) {
+            $(form).ajaxSubmit({
+                success: function(data) {
+                    $.modal.close();
+                    if (data.ok === true) {
+                        swal({
+                            title: "Отлично!",
+                            text: "Новая группа добавлена!",
+                            type: "success"
+                        }, function () {
+                            Tabs._updateCurrent();
+                        });
+                    } else {
+                        swal("Опачки!", "Что-то пошло не так :)", "error");
+                    }
+                }
+            });
+        },
+        rules: {
+            name: {
+                required: true,
+            },
+            type: {
+                required: true,
+            }
+        }
+    })
+});
+</script>

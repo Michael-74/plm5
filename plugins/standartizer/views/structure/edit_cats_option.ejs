@@ -1,0 +1,15 @@
+
+<option<%- (id == item.id ? ' disabled="disabled"' : '') %> value="<%=item.id%>"<%-(prev_id == item.id ? ' selected="selected"' : '')%>><%=add%><%-item.levels.join('.')+'.'%> <%=item.name%></option>
+<%
+if (item.childs.length > 0) {
+    let nadd = add+' — ';
+    for (let j in item.childs) {
+%>
+    <%- include('edit_cats_option', {items:items, item:items[item.childs[j]], add:nadd, prev_id:prev_id, id:id}) %>
+<%
+    }
+} else {
+
+}
+%>
+ 

@@ -1,0 +1,58 @@
+<script src="/include/js/fullcalendar/core/main.js"></script>
+<script src="/include/js/fullcalendar/daygrid/main.js"></script>
+<script src="/include/js/fullcalendar/interaction/main.js"></script>
+<script src="/include/js/fullcalendar/core/locales/ru.js"></script>
+
+<div class="modal-header">
+    <h4 class="modal-title text-left"><%=title%></h4>
+</div>
+<div class="modal-body">
+    <div class="tabs-container">
+        <div class="row">
+            <div class="col-12">
+                <div class="month_view view_rest"></div>
+            </div>
+            <div class="col-12" style="margin-top: 10px; font-size: 0.9em;">
+                <p>Зелёным цветом обозначены дни выполнения операции. Число указывает на количество часов звдействованное на выполнение операции.</p>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-12 text-right">
+                <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+            </div>  
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        var calendarEl = document.querySelector('.month_view');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            showNonCurrentDates: true,
+            defaultDate: '<%=minmax[0]%>',
+            locale: 'ru',
+            height: 440,
+            showNonCurrentDates: false,
+            plugins: [ 'dayGrid' , 'interaction'],
+            editable: false,
+            header: {
+                left: 'title',
+                center: '',
+                right: 'prev,next'
+            },
+            defaultView: 'dayGridMonth',
+            events: '/manufacture/operation_duration_json/<%=station_id%>/<%=operation_id%>',
+            // dateClick: function(data) {
+            //     $.post('/manufacture/operation_duration_json/<%=station_id%>/<%=operation_id%>', {date:data.dateStr}, function(answer) {
+            //         if (answer.ok == true) {
+            //             calendar.refetchEvents();
+            //             // data.dayEl.style.backgroundColor = answer.color;
+            //         }
+            //     }, 'json');
+            //     // info.dayEl.style.backgroundColor = 'red';
+            // }
+        });
+        calendar.render();
+    });
+</script>

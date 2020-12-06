@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <h4 class="modal-title text-left">Настройка длительности операции</h4>
+</div>
+<div class="modal-body">
+    <div class="tabs-container">
+        <form method="POST" action="/standartizer/list/calc_modal_event_change/<%=plan_id%>/<%=station_id%>/<%=operation_id%>/<%=date%>" id="standartizer-chngcalc_form">
+
+            <div class="form-group">
+                <label>Дата операции</label>
+                <input type="date" name="target_date" value="<%-date%>" required="required" />
+                <span class="help-block">Например: <i>31.13.3113</i></span>
+            </div>
+
+            <div class="form-group">
+                <label>Длительность операции</label>
+                <input type="number" step="0.1" min="0" max="<%=len.toFixed(1)%>" name="duration" value="<%=len.toFixed(1)%>" required="required" />
+                <span class="help-block">Например: <i>12.1</i></span>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                    <button type="submit" class="btn btn-primary">Сохранить </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('#standartizer-chngcalc_form').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    success: function(data) {
+                        $.modal.close();
+                        if (data.ok == true) {
+                            Tabs.refreshTab(Tabs._currentTabId());
+                        } else {
+                            swal("Опачки!", "Что-то пошло не так :)", "error");
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>

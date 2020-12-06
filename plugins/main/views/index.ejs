@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><% if (typeof title !== 'undefined') { %><%= title %> — <% } %><%= project_name %></title>
+    <script src="/include/js/jquery-3.3.1.min.js"></script>
+    <!-- <link rel="stylesheet" type="text/x-scss" href="/include/css/style.scss"> -->
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <!-- PLUGINS -->
+    <link href="/include/js/sweetalert/sweetalert.css" rel="stylesheet">
+    <script src="/include/js/sweetalert/sweetalert.min.js"></script>
+
+    <link href="/include/js/jquery_modal/jquery.modal.min.css" rel="stylesheet">
+    <script src="/include/js/jquery_modal/jquery.modal.min.js"></script>
+
+    <script src="/include/js/jquery.maskedinput.js"></script>
+
+    <script src="/include/js/validate/jquery.validate.min.js"></script>
+    <script src="/include/js/jqueryform/jquery.form.min.js"></script>
+
+    <script src="/include/js/pace.min.js"></script>
+
+    <script src="/include/js/dragula/dragula.min.js"></script>
+    <link href="/include/js/dragula/dragula.min.css" rel="stylesheet">
+
+    <script src="/include/js/select2/select2.full.min.js"></script>
+    <link href="/include/js/select2/select2.min.css" rel="stylesheet">
+
+    <script src="/include/js/autosize.min.js"></script>
+
+    <script src="/include/js/sortablejs.js"></script>
+    <script src="/include/js/jquery-sortable.js"></script>
+
+    <script src="/include/js/async.min.js"></script>
+    <script src="/include/js/js.cookie-2.2.1.min.js"></script>
+
+    <script src="/include/js/toastr/toastr.min.js"></script>
+    <link href="/include/js/toastr/toastr.min.css" rel="stylesheet">
+    
+    <link href="/include/js/fullcalendar/core/main.css" rel="stylesheet" />
+    <link href="/include/js/fullcalendar/daygrid/main.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/include/plugins/main/css/style.min.css">
+    <link rel="stylesheet" type="text/css" href="/include/plugins/ol/css/style.min.css">
+    <link rel="stylesheet" type="text/css" href="/include/plugins/users/css/style.min.css">
+    <link rel="stylesheet" type="text/css" href="/include/plugins/standartizer/css/style.min.css">
+    <link rel="stylesheet" type="text/css" href="/include/plugins/standartizer/add.css">
+    <link rel="stylesheet" type="text/css" href="/include/plugins/standartizer/css/additional.css">
+    <link rel="stylesheet" type="text/css" href="/include/plugins/workers/css/style.min.css">
+    <link rel="stylesheet" type="text/css" href="/include/css/addons/hint.css/hint.min.css">
+    <link rel="stylesheet" type="text/css" href="/include/plugins/main/css/additional.css">
+
+</head>
+<body>
+    <div class="container-fluid wrapper">
+        <!-- ВЕРХНЯЯ ЧАСТЬ -->
+		<div class="container-fluid layout-top">
+            <!-- ЛЕВОЕ МЕНЮ -->
+            <div class="layout-top_menu">
+                <ul class="layout-top_menu-list"></ul>
+                <a class="layout-top_menu-exit hint--right" aria-label="Выход" title="Выход" href="/auth/logout"><i class="fal fa-sign-out"></i></a>
+            </div>
+            <!--ЗАГОЛОВОК и КНОПКИ -->
+            <div class="container-fluid layout-top_header">
+                <div class="row">
+                    <div class="col-6">
+                        <h1 class="layout-top_header_title"></h1>
+                    </div>
+                    <div class="col-6 text-right">
+                        <div class="content_top__actions"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- КОНТЕНТ ТАБОВ -->
+            <div class="tabs container-fluid layout-top_content"></div>
+        </div>
+        <!-- НИЖНЕЕ МЕНЮ С ТАБАМИ -->
+        <div class="container-fluid layout-bottom"><ul class="tab_selector"><li class="tab_selector_add" onclick="Menu.openMain(true);"><span><i class="far fa-plus"></i></span></li></ul></div>
+    </div>
+    <script src="/include/plugins/main/js/main.js"></script>
+    <script>
+        $(function() {
+            Menu.build();
+            Tabs.newTab(location.pathname+location.search);
+        });
+    </script>
+</body>
+</html>

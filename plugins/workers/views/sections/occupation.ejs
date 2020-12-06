@@ -1,0 +1,39 @@
+<script src="/include/js/fullcalendar/core/main.js"></script>
+<script src="/include/js/fullcalendar/timeline/main.js"></script>
+<script src="/include/js/fullcalendar/resource-common/main.js"></script>
+<script src="/include/js/fullcalendar/resource-timeline/main.js"></script>
+<script src="/include/js/fullcalendar/core/locales/ru.js"></script>
+<link href="/include/js/fullcalendar/timeline/main.css" rel="stylesheet" />
+<link href="/include/js/fullcalendar/resource-timeline/main.css" rel="stylesheet" />
+<div class="content_top__data"><div class="row"><div class="col-12"><div class="month_sections_view"></div></div></div></div>
+
+<script>
+    $(function() {
+        var calendarEl = document.querySelector('.month_sections_view');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+            locale: 'ru',
+            plugins: [ 'resourceTimeline' ],
+            contentHeight: 'auto',
+            header: {
+                left: 'title',
+                center: '',
+                right: 'prev,next'
+            },
+            defaultView: 'resourceTimelineMonth',
+            // defaultView: 'resourceTimeline',
+            duration: { days: 30 },
+            resourceAreaWidth: 300,
+            slotLabelFormat: [
+                {  month: 'long', year: 'numeric' },
+                { day: 'numeric' },
+                { weekday: 'short' }
+            ],
+            eventOrder: "propOrder",
+            resourceLabelText: 'Участок',
+            resources: '/workers/sections/busy_calendar_resources',
+            events: '/workers/sections/busy_calendar_events'
+        });
+        calendar.render();
+    });
+</script>

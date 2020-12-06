@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: 'Times New Roman', Times, serif;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table>
+            <tbody>
+                <tr>
+                    <td colspan="2"><h2> Общие данные</h2></td>
+                </tr>
+                <tr>
+                    <td>№ Станции</td>
+                    <td><%- (ol_data.num ? ol_data.num : 'б/н') %></td>
+                </tr>
+                <tr>
+                    <td>№ Опросного листа</td>
+                    <td><%=ol_data.ol_num%></td>
+                </tr>
+                <tr>
+                    <td>Обозначение в РД</td>
+                    <td><%=ol_data.rd_num%></td>
+                </tr>
+                <tr>
+                    <td>Тип станции</td>
+                    <td><%=ol_data.type%></td>
+                </tr>
+                <tr>
+                    <td>Подтип станции (Назначение)</td>
+                    <td><%=ol_data.sub_type%></td>
+                </tr>
+                <tr>
+                    <td>Заказчик</td>
+                    <td><%=ol_data.customer%> (<%=ol_data.customer_cat%> категория)</td>
+                </tr>
+                <tr>
+                    <td>Место установки станции</td>
+                    <td><%=ol_data.place%></td>
+                </tr>
+                <tr>
+                    <td>Наименование проектного института</td>
+                    <td><%=ol_data.project_inst%></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <table>
+            <tbody>
+                <% sections.forEach(function(section){ %>
+                <tr><td colspan="3"><h2><%= section.order %>. <%= section.name %></h2></td></tr>
+                    <% sections_data[section.id]['section_params'].forEach(function(section_param) { %>
+                        <% if (section_param.group == 0) { %>
+                            <tr>
+                                <td><%= section.order %>.<%= section_param.order %>.</td>
+                                <td><%= section_param.name %></td>
+                                <td></td>
+                            </tr>
+                        <% } else if (section_param.type == 9) { %>
+                            <tr>
+                                <td><%= section.order %>.<%= section_param.order %>.</td>
+                                <td><%= section_param.name %></td>
+                                <td></td>
+                            </tr>
+                            <% if (typeof ol_data.params.group != 'undefined') { %>
+                                <% if (typeof ol_data.params.group[section_param.group] != 'undefined') { %>
+                                    <% for (let ii = 0; ii < ol_data.params.group[section_param.group].length; ii++) { %>
+                                        <% sections_data[section.id]['section_params'].forEach(function(section_param2) { %>
+                                            <% if (section_param2.group == section_param.group && section_param2.type != 9) { %>
+                                                <tr>
+                                                    <td><%= section.order %>.<%= section_param.order %>.<%-(ii+1)%>.<%= section_param2.order %>.</td>
+                                                    <td><%= section_param2.name %></td>
+                                                    <td></td>
+                                                </tr>
+                                            <% } %>
+                                        <% }) %>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
+                        <% } %>
+                    <% }) %>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

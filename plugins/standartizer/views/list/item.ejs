@@ -1,0 +1,123 @@
+<% 
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+let colspans = 7
+%>
+<tr class="standartizer-list__item" data-id="<%= item.id %>">
+    <% if (access.includes('standartizer:editList')) { %>
+        <% colspans++ %>
+    <td class="text-center">
+        <a href="/standartizer/list/edit/<%=item.id%>" onclick="Tabs.sameTab('/standartizer/list/edit/<%=item.id%>');return false;"><i class="fas fa-pencil-alt"></i></a>
+    </td>
+    <% } %>
+    <td class="text-left">
+        <% if (item.cats.all_summ[0] == 0) { %>
+            <%=item.num%>
+        <% } else { %>
+            <a href="/standartizer/list/view/<%=item.id%>" onclick="Tabs.sameTab('/standartizer/list/view/<%=item.id%>');return false;"><%=item.num%></a>
+        <% } %>
+    </td>
+    <td class="text-left">
+        <%=item.description%>
+        <% if (item.note) { %>
+        <div class="section_descr"><%=item.note%></div>
+        <% } %>
+        <% if (item.comment) { %>
+            <div class="text-danger" style="font-size: 0.9rem;"><%=item.comment%></div>
+        <% } %>
+    </td>
+    <td class="text-center"><%=item.shipment_date%></td>
+
+     
+    <%
+        let fond_smen_plan = parseFloat((parseFloat(item.cats.all_summ[1])/5*3) + (parseFloat(item.cats.all_summ[3])/9*3));
+    
+    %>
+    <td class="text-center"><%- format(fond_smen_plan, 1, 3, ' ', ',')%></td>
+    <td class="text-center"><%- format(item.cats.all_summ[0], 0, 3, ' ', ',')%></td>
+    <td class="text-center"><nobr><%- format(item.cats.all_summ[7], 2, 3, ' ', ',')%></nobr></td>
+    <td class="text-right"><nobr><%- format(item.cats.all_summ[6], 2, 3, ' ', ',')%></nobr></td>
+    <% if (access.includes('standartizer:calcList')) { %>
+        <% colspans++ %>
+        <td class="text-center">
+            <% if (item.cats.all_summ[0] == 0) { %>
+
+            <% } else { %>
+            <a href="/standartizer/list/calc_modal/<%=item.id%>" rel="modal:open" class="btn btn-sm btn-white"><i class="fal fa-poll-h"></i></a>
+            <% } %>
+        </td>
+    <% } %>
+    <!-- <a class="text-navy" title="Скачать расчет" href="#" onclick="StandartizeList.downloadList('<%= item.id %>'); return false;"><i style="font-size: 1.3em;" class="fas fa-arrow-to-bottom"></i></a> -->
+    <% if (access.includes('standartizer:copyList')) { %>
+        <% colspans++ %>
+    <td class="text-center">
+        <% if (item.cats.all_summ[0] == 0) { %>
+            
+        <% } else { %>
+            <a title="Копировать расчет" href="#" onclick="StandartizeList.copyList('<%= item.id %>'); return false;"><i class="far fa-copy"></i></a>
+        <% } %>
+        
+        
+    
+    
+    </td>
+    <% } %>
+    <% if (access.includes('standartizer:editList')) { %>
+        <% colspans++ %>
+        <% colspans++ %>
+    <td class="text-center"><a title="Удалить расчет" href="#" onclick="StandartizeList.deleteListitem('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a></td>
+    <td><input class="switch-button" type="checkbox" onchange="StandartizeList.changeState(this,'<%= item.id %>');return false;" <% if (item.status == 1) { %>checked="checked"<% } %> /></td>
+    
+    <% } %>
+</tr>
+<% if (typeof plans[item.id] != 'undefined') { %>
+    <tr class="standartizer-list__item standartizer-list__item_plan">
+        <td colspan="2"></td>
+        <td colspan="<%= colspans-2 %>">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th width="30" class="text-center"></th>
+                        <th class="text-left">№</th>
+                        <th class="text-center">Дата начала производства</th>
+                        <th class="text-center">Дата готовности станции</th>
+                        <th width="180" class="text-center">Автор</th>
+                        <th width="90" class="text-center">Дата создания</th>
+                        <th width="30"></th>
+                    </tr>
+                </thead>
+            <% for (let i in plans[item.id]) { 
+                let plan = plans[item.id][i]
+            %>
+                <tbody>
+                    <tr class="standartizer-list__planitem" data-planid="<%= plan.id %>">
+                        <td class="text-center">
+                            <% if (access.includes('standartizer:acceptPlan')) { %>
+                                <%- (plan.status === 0 ? '<a href="#" onclick="StandartizeList.changePlanStatus('+plan.id+');return false;" class="hint--right" aria-label="Сделать текущий план основным"><i class="fal fa-clock text-danger"></i></a>' : '<i class="fal fa-check-circle text-navy"></i>') %>
+                            <% } else { %>
+                                <%- (plan.status === 0 ? '<i class="fal fa-clock text-danger"></i>' : '<i class="fal fa-check-circle text-navy"></i>') %>
+                            <% } %>
+                            
+                        </td>
+                        <td class="text-left">
+                            <% if (plan.status === 0) { %>
+                            <a href="/standartizer/list/calc_modal_calendar_edit/<%= plan.id %>">План №<%= plan.id %></a></td>
+                            <% } else { %>
+                            <a href="/standartizer/list/calc_modal_calendar_view/<%= plan.id %>">План №<%= plan.id %></a></td>
+                            <% } %>
+                        <td class="text-center"><%= plan.start_date %></td>
+                        <td class="text-center"><%= plan.end_date %></td>
+                        <td class="text-center"><%- (typeof users[plan.user_id] != 'undefined' ? users[plan.user_id].first_name : 'ID: '+plan.user_id) %></td>
+                        <td class="text-center"><%= plan.create_date %></td>
+                        <td><a title="Удалить план" href="#" onclick="StandartizeList.deletePlanitem('<%= plan.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a></td>
+                    </tr>
+                </tbody>
+            <% } %>
+            </table>
+        </td>
+    </tr>
+<% }%>

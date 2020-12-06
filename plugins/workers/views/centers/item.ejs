@@ -1,0 +1,15 @@
+<tr class="workers-center-list__item" data-id="<%= item.id %>">
+        <% if (access.includes('workers:edit_wcs')) { %>
+        <td class="text-center">
+            <a href="/workers/centers/edit/<%= item.id %>" rel="modal:open"><i class="fas fa-pencil-alt"></i></a>
+        </td>
+        <% } %>
+        <td class="text-left"><%=item.name%></td>
+        <td class="text-center">
+            <!-- <a href="/workers/sections/calendar/<%= item.id %>" class="btn btn-sm btn-primary" onclick="Tabs.sameTab('/workers/sections/calendar/<%= item.id %>');return false;"><i class="far fa-chart-bar"></i></a> -->
+        </td>
+        
+        <% if (access.includes('workers:delete_wcs')) { %>
+        <td class="text-center"><a title="Удалить рабочий центр" href="#" onclick="Workers_Centers.deleteListitem('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a></td>
+        <% } %>
+    </tr>

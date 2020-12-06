@@ -1,0 +1,7 @@
+<% if (typeof group != 'undefined') { %>
+    <label><input onchange="OlEdit.autoSave(this); return false;" type="radio" <%- (params=='on'?'checked="checked"':(params=='off'?'':'checked="checked"')) %> name="group_<%=group%>_<%=num%>_<%=section_param.id%>" value="on" />&nbsp;Да</label>
+    <label><input onchange="OlEdit.autoSave(this); return false;" type="radio" <%- (params=='off'?'checked="checked"':'') %> name="group_<%=group%>_<%=num%>_<%=section_param.id%>" value="off" />&nbsp;Нет</label>
+<% } else { %>
+    <label><input onchange="OlEdit.autoSave(this); return false;" type="radio" <%- (params=='on'?'checked="checked"':(params=='off'?'':'checked="checked"')) %> name="data_<%=section_param.id%>" value="on" />&nbsp;Да</label>
+    <label><input onchange="OlEdit.autoSave(this); return false;" type="radio" <%- (params=='off'?'checked="checked"':'') %> name="data_<%=section_param.id%>" value="off" />&nbsp;Нет</label>
+<% } %>

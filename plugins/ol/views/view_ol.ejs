@@ -1,0 +1,101 @@
+<div class="content_top__data">
+        <table class="table table-striped table-hover table-fixed-with">
+            <thead>
+                <tr>
+                    <th width="250" class="text-left">Наименование</th>
+                    <th class="text-left">Значение</th>
+                </tr>
+            </thead>
+            <tbody class="table__tbody ol_null_section">
+                <tr>
+                    <td>№ Станции</td>
+                    <td><%- (ol_data.num ? ol_data.num : 'б/н') %></td>
+                </tr>
+                <tr>
+                    <td>№ Опросного листа</td>
+                    <td><%=ol_data.ol_num%></td>
+                </tr>
+                <tr>
+                    <td>Полное наименование в РД</td>
+                    <td><%=ol_data.rd_fullname%></td>
+                </tr>
+                <tr>
+                    <td>Обозначение в РД</td>
+                    <td><%=ol_data.rd_num%></td>
+                </tr>
+                <tr>
+                    <td>Тип станции</td>
+                    <td>
+                        <% for (let i in pre.types) { %>
+                            <%- (pre.types[i] == ol_data.type ? pre.types[i] : '') %>
+                        <% } %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Подтип станции (Назначение)</td>
+                    <td>
+                        <% for (let i in pre.subtypes) { %>
+                        <%- (pre.subtypes[i] == ol_data.sub_type ? pre.subtypes[i] : '') %>
+                        <% } %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Заказчик</td>
+                    <td>
+                        <% for (let i in pre.customers) { %>
+                        <%- (pre.customers[i] == ol_data.customer ? pre.customers[i] : '') %>
+                        <% } %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Категория заказчика</td>
+                    <td>
+                        <%- (ol_data.customer_cat == 1 ? '1 категория' : '') %>
+                        <%- (ol_data.customer_cat == 2 ? '2 категория' : '') %>
+                        <%- (ol_data.customer_cat == 3 ? '3 категория' : '') %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Место установки станции</td>
+                    <td><%=ol_data.place%></td>
+                </tr>
+                <tr>
+                    <td>Наименование проектного института</td>
+                    <td>
+                        <% for (let i in pre.pro_inst) { %>
+                        <%- (pre.pro_inst[i] == ol_data.project_inst ? pre.pro_inst[i] : '') %>
+                        <% } %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Количество частей</td>
+                    <td><%=ol_data.parts%></td>
+                </tr>
+                <tr>
+                    <td>Дополнительные требования</td>
+                    <td><%=ol_data.additional%></td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-striped table-hover table-ol table-fixed-with">
+            <% sections.forEach(function(section){ %>
+                <%- include('view_sections', {section: section, sections_data: sections_data}) %>
+            <% }) %>
+        </table>
+    </div>
+    
+    <script>
+        $(function(){
+           
+        });
+        var OlView = {
+            toggleBody(e) {
+                var tbody = $(e).closest('thead').next();
+                if (tbody.hasClass('table__tbody-closed') == true) {
+                    tbody.removeClass('table__tbody-closed');
+                } else {
+                    tbody.addClass('table__tbody-closed');
+                }
+            }
+        }
+    </script>

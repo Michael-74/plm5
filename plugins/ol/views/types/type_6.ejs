@@ -1,0 +1,16 @@
+<% if (typeof group != 'undefined') { %>
+    <select onchange="OlEdit.autoSave(this); return false;" name="group_<%=group%>_<%=num%>_<%=section_param.id%>" class="ol_select">
+        <option value="">-</option>
+        <% for (let i in values) { %>
+        <option value="<%=values[i].id%>" <%- (params == values[i].id ? 'selected="selected"':'') %>><%=values[i].value%></option>
+        <% } %>
+    </select>
+<% } else { %>
+    <select onchange="OlEdit.autoSave(this); return false;" name="data_<%=section_param.id%>" class="ol_select">
+        <option value="">-</option>
+        <% for (let i in values) { %>
+        <option value="<%=values[i].id%>" <%- (params == values[i].id ? 'selected="selected"':'') %>><%=values[i].value%></option>
+        <% } %>
+    </select>
+<% } %>
+

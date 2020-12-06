@@ -1,0 +1,46 @@
+<ul class="content_top__menu">
+    <li class="active">Работники</li>
+    <li><a href="/workers/brigades" onclick="Tabs.sameTab('/workers/brigades');return false;">Бригады</a></li>
+    <li><a href="/workers/sections" onclick="Tabs.sameTab('/workers/sections');return false;">Производственные участки</a></li>
+    <li><a href="/workers/chts" onclick="Tabs.sameTab('/workers/chts');return false;">Тарифные ставки</a></li>
+</ul>
+<div class="content_top__data">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <% if (access.includes('workers:edit_worker')) { %>
+                <th width="30"></th>
+                <% } %>
+                <th class="text-left" width="270">ФИО </th>
+                <th class="text-left">Участок </th>
+                <th class="text-left" width="85">Бригада </th>
+                <th class="text-center" width="100">График работы </th>
+                <th class="text-center" width="50">Смена, час.</th>
+                <% if (access.includes('workers:edit_rest_calendar')) { %>
+                <th class="text-center" width="30"></th>
+                <% } %>
+                <% if (access.includes('workers:delete_worker')) { %>
+                <th width="30"></th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody class="table__tbody">
+        <% workers.forEach(function(item){ %>
+            <%- include('item', {item: item}) %>
+        <% }) %>
+        </tbody>
+    </table>
+</div>
+<script>
+    var Workers_Main = {
+        deleteListitem(id) {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить рабочего?', 'Нет', 'Да, удалить!', function() {
+                $.get('/workers/delete/'+id, function(data) {
+                    if (data.ok === true) {
+                        $('.tab-active .workers_list__item[data-id="'+id+'"]').remove();
+                    }
+                },'json');
+            });
+        }
+    }
+</script>

@@ -1,0 +1,57 @@
+<% 
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%>
+<tr class="standartizer-list__item" data-id="<%= item.id %>">
+    <% if (access.includes('manufacture:edit')) { %>
+    <td class="text-center">
+        <a href="/manufacture/edit/<%=item.id%>" onclick="Tabs.sameTab('/manufacture/edit/<%=item.id%>');return false;" class="btn btn-sm btn-white"><i class="fal fa-poll-h"></i></a>
+    </td>
+    <% } %>
+    <td class="text-center">
+        <%=item.num%>
+    </td>
+    <td class="text-left">
+        <%=item.description%>
+        <% if (item.note) { %>
+        <div class="section_descr"><%=item.note%></div>
+        <% } %>
+        <% if (item.comment) { %>
+            <div class="text-danger" style="font-size: 0.9rem;"><%=item.comment%></div>
+        <% } %>
+    </td>
+    <td class="text-center"><%=item.shipment_date%></td>
+    <td class="text-center"><%-(item.plan_data != false ? item.plan_data[0].start_plan_date : '-')%></td>
+    <td class="text-center"><%-(item.plan_data != false ? item.plan_data[0].end_plan_date : '-')%></td>
+    <td class="text-center">
+        <% if (item.is_started == true) { %>
+            <% if (item.donediff > 0) { %>
+                <i class="fal fa-exclamation-triangle text-danger"></i>
+            <% } else { %>
+                <i class="fal fa-check-circle text-navy"></i>
+            <% } %>
+        <% } else { %>
+            <i class="fal fa-clock text-info"></i>
+        <% } %>
+    </td>
+    <td class="text-center">
+        <nobr>
+            <!-- <%- format(item.cats.all_summ[7], 0, 3, ' ', ',')%> -->
+            <%- parseInt(item.cats.all_summ[7]) %>
+        </nobr>
+    </td>
+    <td class="text-center">
+        <nobr>
+            <!-- <%- format(item.station_done_hours_sum, 0, 3, ' ', ',')%> -->
+            <%- parseInt(item.station_done_hours_sum) %>
+        </nobr>
+    </td>
+    <td class="text-center">
+        <progress class="progressDone" name="progressDone_<%-item.id%>" value="<%-parseInt(item.all_done_percents || 0)%>" max="100" style="width:100px;"></progress>
+    </td>
+    <td class="text-center"><%- (item.donediff > 0 ? item.donediff : '0') %></td>
+</tr>

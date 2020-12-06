@@ -1,0 +1,77 @@
+<% 
+if ((data != null && typeof data[item.id] != 'undefined' && parseFloat(data[item.id].val7) || (parseFloat(item.childsum[6]) > 0)) > 0) {
+
+
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%>
+<tr class="section_params_tr<%-(item.childs.length == 0 ? ' fullfilled' : '')%>" data-id="<%-item.id%>" data-ap="<%= item.average_payment %>" data-wl="<%= item.work_long %>">
+    <%
+    let nbsp_num = '';
+    if (item.levels.length > 2) {
+        let cnt = item.levels.length - 2;
+        for (let i = 0; i < cnt; i++) {
+            nbsp_num += '&nbsp;&nbsp;&nbsp;';
+        }
+    }
+    %>
+    <td class="text-left standartizer_list_num_td"><nobr><%-item.levels.join('.')+'.'%></nobr></td>
+    <td class="text-left" <%-(item.childs.length == 0? '':'colspan="5"')%>>
+        <div><%= item.name %></div>
+        <% if (item.childs.length == 0) { %>
+        <div class="section_descr"><span>Средняя ЗП: <%= item.average_payment %> руб.</span></div>
+        <div class="section_descr"><span>Продолжительность рабочей смены: <%= item.work_long %></span></div>
+        <% } %>
+    </td>
+    <% if (item.childs.length == 0) { %>
+    <td class="text-center">
+        <%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val1 : '' )%>
+    </td>
+    <td class="text-center">
+        <%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val2 : '' )%> (<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val3 : '' )%> ч)
+    </td>
+    <td class="text-center">
+        <%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val4 : '' )%> (<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val5 : '' )%> ч)
+    </td> 
+    <td class="text-center">
+        <nobr><span class="sum1"><%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val6 : '' )%></span></nobr>
+    </td>
+    <td class="text-right">
+        <nobr>
+            <span class="sum2">
+            <% if (data != null && typeof data[item.id] != 'undefined') { %>
+                <%- format(parseFloat(data[item.id].val7), 2, 3, ' ', ',') %>
+            <% } %>
+            </span> руб.
+        </nobr>
+    </td>
+    <% } else { %>
+    <td class="text-right">
+        <nobr>
+            <span class="sum2_group">
+                <% if (parseFloat(item.childsum[6]) > 0) { %>
+                    <%- format(parseFloat(item.childsum[6]), 2, 3, ' ', ',') %> руб.
+                <% } %>
+            </span>
+        </nobr>
+    </td>
+    <% } %>
+</tr>
+<%
+    if (item.childs.length > 0) { 
+        for (let j in item.childs) {
+%>
+                    <%- include('view_cats_inner', {items:items, item:items[item.childs[j]], section:section}) %>
+<%
+        }
+    }
+%>
+
+
+<%
+}
+%>

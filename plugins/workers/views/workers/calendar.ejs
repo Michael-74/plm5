@@ -1,0 +1,48 @@
+<script src="/include/js/fullcalendar/core/main.js"></script>
+<script src="/include/js/fullcalendar/daygrid/main.js"></script>
+<script src="/include/js/fullcalendar/interaction/main.js"></script>
+<script src="/include/js/fullcalendar/core/locales/ru.js"></script>
+
+<div class="content_top__data">
+    <div class="month_view"></div>
+</div>
+<script>
+    $(function() {
+        var calendarEl = document.querySelector('.month_view');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            locale: 'ru',
+            showNonCurrentDates: false,
+            plugins: [ 'dayGrid' , 'interaction'],
+            editable: true,
+            // selectable: true,
+            // defaultDate: '2019-12-01',
+            header: {
+                left: 'title',
+                center: '',
+                right: 'prev,next'
+            },
+            defaultView: 'dayGridMonth',
+            events: '/workers/calendar_json/<%=worker.id%>',
+            dateClick: function(data) {
+                $.post('/workers/calendar_edit/<%=worker.id%>', {date:data.dateStr}, function(answer) {
+                    if (answer.ok == true) {
+                        calendar.refetchEvents();
+                        // data.dayEl.style.backgroundColor = answer.color;
+                    }
+                }, 'json');
+                // info.dayEl.style.backgroundColor = 'red';
+            },
+            select: function(info) {
+                console.log(info.startStr);
+                console.log(info.endStr);
+            }
+        });
+
+        calendar.render();
+    });
+
+    var Workers_Calendar = {
+        
+    }
+</script>

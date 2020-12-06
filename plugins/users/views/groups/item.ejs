@@ -1,0 +1,54 @@
+<tr class="group__item" data-id="<%= item.id %>">
+    <td class="text-center">
+        <%= item.id %>
+    </td>
+    <% if (access.includes('users:editSettings')) { %>
+    <td class="text-center">
+        <% if (def_groups.includes(parseInt(item.id)) == false) { %>
+        <a title="Редактировать роль" href="/users/groups/edit/<%= item.id %>"  rel="modal:open"><i class="fas fa-pencil-alt"></i></a>
+        <% } %>
+    </td>
+    <% } %>
+    <td class="text-left">
+        <%= item.name %>
+    </td>
+    <% if (access.includes('users:editSettings')) { %>
+    <td class="text-center">
+        <% if (def_groups.includes(parseInt(item.id)) == false) { %>
+        <a title="Удалить роль" href="#" onclick="Settings_Groups.deleteGroup('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a>
+        <% } %>
+    </td>
+    <% } %>
+</tr>
+<% if (access.includes('users:editSettings') && item.id != 1) { %>
+<tr class="group__item" data-id="<%= item.id %>">
+    <td class="text-left" colspan="<%- (access.includes('users:editSettings') ? '4' : '2') %>">
+        <div class="row">
+            <% for (let plugin_name in perm_list) { %>
+            <div class="col-6">
+                <div class="permission-layer">
+                    <h2><%=perm_list[plugin_name].name%></h2>
+                    <ul>
+                        <% for (let i in perm_list[plugin_name].list) { 
+                            let pitem = perm_list[plugin_name].list[i];
+                            let chkd = '';
+                            if (typeof cur_perm_list[item.id] != 'undefined') {
+                                if (typeof cur_perm_list[item.id][plugin_name] != 'undefined') {
+                                    if (cur_perm_list[item.id][plugin_name].includes(pitem.perm_name)) {
+                                        chkd = 'checked="checked"';
+                                    }
+                                }
+                            }
+                        %>
+                        <li><input class="switch-button" onchange="Settings_Groups.changePerimssions(this, '<%=item.id%>', '<%=plugin_name%>', '<%=pitem.perm_name%>');return false;" type="checkbox" <%-chkd%> /> — <span title="<%=pitem.description%>"><%=pitem.name%></span></li>
+                        <% } %> 
+                    </ul>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </td>
+</tr> 
+<% } else { %>
+<tr></tr>
+<% } %>

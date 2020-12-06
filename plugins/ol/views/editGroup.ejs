@@ -1,0 +1,26 @@
+<% 
+let cs = sections.filter(function (el) {
+    return el.id == sec_id;
+})
+let section = cs[0];
+%>
+<tr class="section_params_tr section_params_tr_group" data-groupid="<%=group%>" data-num="<%=nextnum%>">
+    <td colspan="3">
+        <a href="#" class="btn btn-sm btn-white" onclick="OlEdit.deleteGroupData('<%=group%>', '<%=nextnum%>'); return false;"><i class="fa fa-trash"></i>&nbsp;удалить набор <%= section.order %>.<%= po %>.<%=nextnum%></a>
+    </td>
+</tr>
+<% sections_data[section.id]['section_params'].forEach(function(section_param) { %>
+    <% if (section_param.group == group) { %>
+        <tr class="section_params_tr section_params_tr_group" data-groupid="<%=section_param.group%>" data-num="<%=nextnum%>">
+            <td colspan="3">
+                <div class="flex--row">
+                    <div class="flex--col--group" style="width: 400px;">
+                        <div class="flex--col"><nobr><%= section.order %>.<%= po %>.<%=nextnum%>.<%- (nsize > 1 ? section_param.order+'.' : '') %></nobr></div>
+                        <div class="flex--col"><%= section_param.name %></div>
+                    </div>
+                    <div class="flex--col"><%- include('types/type_'+section_param.type, {section_param: section_param, values: sections_data[section.id]['params_values'][section_param.id],params:false,group:group, num:nextnum}) %></div>
+                </div>
+            </td>
+        </tr>
+    <% } %>
+<% }) %>

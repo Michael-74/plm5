@@ -1,0 +1,98 @@
+<% 
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%>
+
+<div class="modal-header">
+    <h4 class="modal-title text-left"><i class="fal fa-users-class modal-icon"></i>&nbsp;Добавление работника</h4>
+</div>
+<div class="modal-body">
+    <div class="tabs-container">
+        <form method="POST" action="/workers/add" id="workers__add_form">
+
+            <div class="form-group">
+                <label>ФИО  </label>
+                <input type="text" value="" name="fio" required="required" />
+                <span class="help-block">Например: <i>Иванов Иван Иванович</i></span>
+            </div>
+
+            <div class="form-group">
+                <label>Должность  </label>
+                <input type="text" value="" name="position" required="required" />
+                <span class="help-block">Например: <i>сварщик</i></span>
+            </div>
+
+            <div class="form-group">
+                <label>Должность (ЧТС)</label>
+                <select style="height: initial;overflow: auto;" name="chts_id" class="form-control selectized_input_tpl" required="required">
+                    <% for (let i in grp_chts) { %>
+                    <optgroup label="<%=i%>">
+                        <% for (let j in grp_chts[i]) { %>
+                        <%
+                            let name = `${i} ${grp_chts[i][j].cls} разряда (${format(grp_chts[i][j].rate,2,3,' ',',')} руб.)`;
+                        %>
+                        <option value="<%-grp_chts[i][j].id%>"><%-name%></option>
+                        <% } %>
+                    </optgroup>
+                    <% } %>
+                </select>
+                <span class="help-block">Например: <i>Генеральный директор 1 разряда (3 125,00 руб.)</i></span>
+            </div>
+
+            <div class="form-group">
+                <label>Бригада</label>
+                <select style="height: initial;overflow: auto;" name="brigade_id" class="form-control selectized_input_tpl" required="required">
+                    <% for (let i in sections) { %>
+                    <optgroup label="<%=sections[i].name%>">
+                        <% for (let j in sections[i].childs) { %>
+                        <%
+                            let name = `Бригада ${sections[i].childs[j].brigade} (${sections[i].childs[j].group}, ${sections[i].childs[j].division})`;
+                        %>
+                        <option value="<%-sections[i].childs[j].id%>"><%-name%></option>
+                        <% } %>
+                    </optgroup>
+                    <% } %>
+                </select>
+                <span class="help-block">Например: <i>Бригада 1</i></span>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                    <button type="submit" class="btn btn-success">Добавить </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('.selectized_input_tpl').select2();
+
+        $('#workers__add_form').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    success: function(data) {
+                        $.modal.close();
+                        if (data.ok == true) {
+                            swal({
+                                title: "Отлично!",
+                                text: "Работник успешно добавлен!",
+                                type: "success"
+                            }, function () {
+                                Tabs.refreshTab(Tabs._currentTabId());
+                            });
+                        } else {
+                            swal("Опачки!", "Что-то пошло не так :)", "error");
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>

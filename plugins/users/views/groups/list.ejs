@@ -1,0 +1,46 @@
+<ul class="content_top__menu">
+    <li><a href="/users" onclick="Tabs.sameTab('/users');return false;">Пользователи</a></li>
+    <li class="active">Роли пользователей</li>
+</ul>
+<div class="content_top__data">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-center" width="40">№</th>
+                <% if (access.includes('users:editSettings')) { %>
+                    <th width="30"></th>
+                <% } %>
+                <th class="text-left">Наименование</th>
+                <% if (access.includes('users:editSettings')) { %>
+                <th class="text-center" width="40"></th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody class="table__tbody">
+            <% for (let i in groups) { %>
+                <%  if (i != 1) { %>
+                    <%- include('item', {item: {id:i, name:groups[i]}}) %>
+                <% } %>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+<script>
+    var Settings_Groups = {
+        deleteGroup(id) {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить выбранную роль? Все связанные данные будут безвозвратно удалены!', 'Нет', 'Да, удалить!', function() {
+                $.get('/users/groups/delete/'+id, function(data){
+                    if (data.ok === true) {
+                        $('.tab-active .group__item[data-id="'+id+'"]').remove();
+                    }
+                },'json')
+            });
+        },
+        changePerimssions(th, group_id, plugin, func) {
+            var cstate = (th.checked?1:0);
+            $.get('/users/groups/permissions/'+group_id+'/'+plugin+'/'+func+'/'+cstate, function(data) {
+                
+            },'json');
+        }
+    }
+</script>

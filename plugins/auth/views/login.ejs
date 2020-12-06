@@ -1,0 +1,28 @@
+<div class="auth__verticalhelper"></div>
+<div class="auth__content">
+    <div class="auth__content-logo">
+        <img src="/include/img/logo.png"/>
+    </div>
+    <% if (data.error) { %>
+        <p class="auth__content-error">
+            Неверный логин или пароль
+        </p>
+    <% } %>
+    <form class="auth__content-form" action="/auth" method="post">
+        <input type="hidden" name="repath" value="<%=data.repath%>" />
+        <div class="form-group">
+            <input name="username" type="text" placeholder="Логин">
+        </div>
+        <div class="form-group">
+            <input name="password" type="password" placeholder="Пароль">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary full-width" type="submit">Войти</button>
+        </div>
+        <% if (can_register) { %>
+        <div class="form-group">
+            <a class="auth__additional-link full-width" href="/auth/register?repath=<%=data.en_repath%>">создать аккаунт</a>
+        </div>
+        <% } %>
+    </form>
+</div>

@@ -1,0 +1,42 @@
+<ul class="content_top__menu">
+        <li class="active">Рабочие центры</li>
+        <li><a href="/workers" onclick="Tabs.sameTab('/workers');return false;">Работники</a></li>
+        <li><a href="/workers/brigades" onclick="Tabs.sameTab('/workers/brigades');return false;">Бригады</a></li>
+        <li><a href="/workers/sections" onclick="Tabs.sameTab('/workers/sections');return false;">Производственные участки</a></li>
+        <li><a href="/workers/chts" onclick="Tabs.sameTab('/workers/chts');return false;">Тарифные ставки</a></li>
+    </ul>
+    <div class="content_top__data">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <% if (access.includes('workers:edit_wcs')) { %>
+                    <th width="30" class="text-center"></th>
+                    <% } %>
+                    <th class="text-left">Наименование</th>
+                    <th width="30"></th>
+                    <% if (access.includes('workers:delete_wcs')) { %>
+                    <th width="30"></th>
+                    <% } %>
+                </tr>
+            </thead>
+            <tbody class="table__tbody">
+                <% for (let i in items) { %>
+                <% let item = items[i]; %>
+                    <%- include('item', {item: item}) %>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        var Workers_Centers = {
+            deleteListitem(id) {
+                DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить выбранный рабочий центр?', 'Нет', 'Да, удалить!', function() {
+                    $.get('/workers/centers/delete/'+id, function(data) {
+                        if (data.ok === true) {
+                            $('.tab-active .workers-center-list__item[data-id="'+id+'"]').remove();
+                        }
+                    },'json');
+                });
+            },
+        }
+    </script>

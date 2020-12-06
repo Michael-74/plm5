@@ -1,0 +1,33 @@
+<% 
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%>
+<tr class="workers_list__item" data-id="<%= item.id %>">
+    <% if (access.includes('workers:edit_worker')) { %>
+    <td class="text-center"><a href="/workers/edit/<%= item.id %>" rel="modal:open"><i class="fas fa-pencil-alt"></i></a></td>
+    <% } %>
+    <td class="text-left">
+        <%=item.fio%>
+        <% if (item.chts_id) { %>
+        <div class="section_descr"><%-grp_chts[item.chts_id].position%> <%-grp_chts[item.chts_id].cls%> разряда</div>
+        <% } %>
+    </td>
+
+    <td class="text-left"><%=(brigades[item.brigade_id]?brigades[item.brigade_id].section_name:'')%></td>
+    <td class="text-left">Бригада <%=(brigades[item.brigade_id]?brigades[item.brigade_id].num:'')%></td>
+    <td class="text-center"><%-(brigades[item.brigade_id]?(brigades[item.brigade_id].work_plan == 1 ? '2/2' : '5-ти дневка (ПН-ПТ)'):'')%></td>
+    <td class="text-center"><%=(brigades[item.brigade_id]?brigades[item.brigade_id].work_length:'')%></td>
+    
+    <% if (access.includes('workers:edit_rest_calendar')) { %>
+    <td class="text-center">
+        <a href="/workers/calendar/<%= item.id %>" rel="modal:open" class="btn btn-sm btn-white"><i class="fas fa-calendar"></i></a>
+    </td>
+    <% } %>
+    <% if (access.includes('workers:delete_worker')) { %>
+    <td class="text-center"><a title="Удалить рабочего" href="#" onclick="Workers_Main.deleteListitem('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a></td>
+    <% } %>
+</tr>

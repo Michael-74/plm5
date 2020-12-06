@@ -1,0 +1,41 @@
+<ul class="content_top__menu">
+    <li><a href="/workers" onclick="Tabs.sameTab('/workers');return false;">Работники</a></li>
+    <li><a href="/workers/brigades" onclick="Tabs.sameTab('/workers/brigades');return false;">Бригады</a></li>
+    <li><a href="/workers/sections" onclick="Tabs.sameTab('/workers/sections');return false;">Производственные участки</a></li>
+    <li class="active">Тарифные ставки</li>
+</ul>
+<div class="content_top__data">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <% if (access.includes('workers:edit_chts')) { %>
+                <th width="30"></th>
+                <% } %>
+                <th class="text-left">Должность </th>
+                <th class="text-center" width="100">Разряд </th>
+                <th class="text-center" width="80">Ст-ть часа, руб.</th>
+                <% if (access.includes('workers:delete_chts')) { %>
+                <th width="30"></th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody class="table__tbody">
+            <% for (let i in items) { %>
+                <%- include('item', {item: items[i]}) %>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+<script>
+    var Workers_Chts = {
+        deletChtsItem(id) {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить тарифную ставку?', 'Нет', 'Да, удалить!', function() {
+                $.get('/workers/chts/delete/'+id, function(data) {
+                    if (data.ok === true) {
+                        $('.tab-active .workers_chts__item[data-id="'+id+'"]').remove();
+                    }
+                },'json');
+            });
+        }
+    }
+</script>

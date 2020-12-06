@@ -1,0 +1,66 @@
+<div class="content_top__data">
+    <table class="table table-striped table-hover table-draggable">
+        <thead>
+            <tr>
+                <th width="40" class="text-center">№ </th>
+                <% if (access.includes('ol:editSections')) { %>
+                <th width="30" class="text-center"></th>
+                <% } %>
+                <th class="text-left">Наименование раздела </th>
+                <% if (access.includes('ol:editSections')) { %>
+                <th width="75" class="text-center">Цвет </th>
+                <% } %>
+                <% if (access.includes('ol:deleteSections')) { %>
+                <th width="30"></th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody class="table__tbody table__tbody_sections">
+            <% items.forEach(function(item){ %>
+                <%- include('line', {item:item}) %>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+<script>
+
+    dragula([document.querySelector('.table__tbody_sections')], {
+        direction: 'vertical',
+        moves: function (el, container, handle) {
+            return handle.classList.contains('drag_sortable');
+        }
+    }).on('dragend', function(el) {
+        OlSections.reSort();
+    });
+
+    var OlSections = {
+        changeColor(el, id, tid) {
+            $.post('/ol/sections/'+tid+'/color/'+id, {color:$(el).val()}, function(data) {
+                
+            },'json')
+        },
+        deleteSection(id, tid) {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить выбранный раздел?', 'Нет', 'Да, удалить!', function() {
+                $.get('/ol/sections/'+tid+'/delete/'+id, function(data) {
+                    if (data.ok === true) {
+                        $('.tab-active .sections__list[data-id="'+id+'"]').remove();
+                    }
+                },'json')
+            });
+            
+        },
+        reSort() {
+            var sortedIDs = [];
+            $('.tab.tab-active .table__tbody_sections tr').each(function( index ) {
+                sortedIDs.push(parseInt($(this).attr('data-id')));
+            });
+            $.get('/ol/sections/resort/'+sortedIDs.join(','));
+            var ii = 1;
+            $('.tab.tab-active .sections__list_order>span').each(function(index) {
+                $(this).html(ii+'.');
+                ii++;
+            });
+        }
+
+    }
+</script>

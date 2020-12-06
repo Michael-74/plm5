@@ -1,0 +1,73 @@
+<tr class="ol__list" data-id="<%= item.id %>">
+    <% if (access.includes('ol:viewList')) { %>
+        <td class="text-center">
+            <a class="text-navy" title="Скачать опросный лист" href="/ol/export/<%=item.id%>"><i style="font-size: 1.3em;" class="fas fa-arrow-to-bottom"></i></a>
+        </td>
+    <% } %>
+    <% if (access.includes('ol:editLists')) { %>
+    <td class="text-center">
+        <% if (item.closed == 0) { %>
+        <a title="Редактировать опросный лист" onclick="Tabs.sameTab('/ol/edit/<%=item.id%>');return false;" href="/ol/edit/<%=item.id%>"><i class="fas fa-pencil-alt"></i></a>
+        <% } %>
+    </td>
+    <% } %>
+    <td class="text-center">
+        <nobr>
+        <% if (access.includes('ol:editnumLists')) { %>
+            <% if (item.closed == 0) { %>
+            <a href="/ol/editnum/<%= item.id %>" rel="modal:open"><%- (item.num ? item.num : 'б/н') %></a>
+            <% } else { %>
+                <%- (item.num ? item.num : 'б/н') %>
+            <% } %>
+        <% } else { %>
+            <%- (item.num ? item.num : 'б/н') %>
+        <% } %>
+        </nobr>
+    </td>
+    <td class="text-left">
+        <nobr><%- (item.ol_num ? item.ol_num : 'б/н') %></nobr>
+    </td>
+    <td class="text-left">
+        <nobr><a title="Просмотр опросного листа" onclick="Tabs.newTab('/ol/view_ol/<%=item.id%>');return false;" href="/ol/view_ol/<%=item.id%>"><b><%= item.rd_num %></b></a></nobr>
+    </td>
+    <td class="text-left">
+        <%- (item.sub_type != '-' ? '<div>Тип: '+item.type+'</div>' : '<div>'+item.type+'</div>')  %>
+        <%- (item.sub_type != '-' ? '<div>Подтип: '+item.sub_type+'</div>' : '')  %>
+    </td>
+    <td class="text-left">
+        <div><b><%= item.customer %></b></div>
+        <div>Категория: <%= item.customer_cat %> категория</div>
+        <%- (item.place ? '<div>Место установки: '+item.place+'</div>' : '')  %>
+    </td>
+    
+    <td class="text-left">
+        <nobr><%-users[item.user_id].first_name%></nobr>
+    </td>
+    <td class="text-center">
+        <% if  (item.user_id == userid) { %>
+            <% if (access.includes('ol:closeLists')) { %>
+                <% if (item.closed == 0) { %>
+                    <a href="#" onclick="Olist.closeList('<%=item.id%>', 1); return false;" class="text-navy"><i class="fas fa-lock-open"></i></a>
+                <% } else { %>
+                    <a href="#" onclick="Olist.closeList('<%=item.id%>', 0); return false;" class="text-danger"><i class="fas fa-lock"></i></a>
+                <% } %>
+            <% } else { %>
+                <% if (item.closed == 0) { %>
+                    <i class="fas fa-lock-open text-navy"></i>
+                <% } else { %>
+                    <i class="fas fa-lock text-danger"></i>
+                <% } %>
+            <% } %>
+        <% } %>
+    </td>
+    <% if (access.includes('ol:deleteLists')) { %>
+    <td class="text-center">
+        <% if (item.closed == 0 && item.user_id == userid) { %>
+        <a title="Удалить опросный лист" href="#" onclick="Olist.deleteOL('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a>
+        <% } %>
+    </td>
+    <% } %>
+    <% if (access.includes('ol:editLists')) { %>
+    <td class="text-center"><a title="Копировать опросный лист" href="#" onclick="Olist.copyList('<%= item.id %>'); return false;"><i class="far fa-copy"></i></a></td>
+    <% } %>
+</tr>

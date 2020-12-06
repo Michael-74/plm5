@@ -1,0 +1,28 @@
+<tr class="templates__list" data-id="<%= item.id %>">
+    <td class="text-center">
+        <%= item.id %>
+    </td>
+    <% if (access.includes('ol:editTemplates')) { %>
+    <td class="text-center">
+        <a title="Редактировать шаблон" href="/ol/templates/edit/<%=item.id%>" rel="modal:open"><i class="fas fa-pencil-alt"></i></a>
+    </td>
+    <% } %>
+    <td class="text-left">
+        <% if (access.includes('ol:viewSections')) { %>
+            <a onclick="Tabs.sameTab('/ol/sections/<%=item.id%>');return false;" href="#"><%=item.name%></a>
+        <% } else { %>
+            <%=item.name%>
+        <% } %>
+    </td>
+    <% if (access.includes('ol:addTemplates')) { %>
+    <td class="text-center">
+        <a title="Копировать шаблон" href="#" onclick="OlTemplates.copyTemplate('<%= item.id %>'); return false;"><i class="far fa-copy"></i></a>
+    </td>
+    <% } %>
+    <% if (access.includes('ol:deleteTemplates')) { %>
+    <td class="text-center">
+        <a title="Удалить шаблон" href="#" onclick="OlTemplates.deleteTemplate('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a>
+    </td>
+    <% } %>
+</tr>
+            

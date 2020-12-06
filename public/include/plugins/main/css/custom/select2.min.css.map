@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,kBAAkB,AAAC,CACf,SAAS,CAAE,IAAI,CAClB,AACD,AAAA,2BAA2B,CAAC,0BAA0B,AAAC,CACnD,MAAM,CAAE,IAAI,CACZ,MAAM,CAAE,cAAc,CACtB,aAAa,CAAE,GAAG,CACrB,AACD,AAAA,2BAA2B,CAAC,0BAA0B,CAAC,4BAA4B,AAAC,CAChF,WAAW,CAAE,IAAI,CACpB",
+    "sources": [
+        "select2.scss"
+    ],
+    "names": [],
+    "file": "select2.min.css"
+}

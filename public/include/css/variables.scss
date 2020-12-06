@@ -1,0 +1,80 @@
+// Шрифты
+$fa-font-path:  '/include/webfonts';
+@import 'opensans.scss';
+@import './font_awesome/fontawesome.scss';
+@import './font_awesome/light.scss';
+@import './font_awesome/regular.scss';
+@import './font_awesome/solid.scss';
+// @import 'font_awesome/brands.scss';
+$fontsize: 14px;
+$fontfamily: 'Open Sans', Arial,sans-serif;
+ 
+// Цвета
+$color: #000000;
+$color__bg: #ffffff; 
+$color__bg_inner: #eeeeee; 
+$color__gray: #d8d8d8; 
+$color__primary: #0099d2; 
+$color__success: #1ab394; 
+$color__danger: #ed5565; 
+$color__form-shadow: rgba(0,0,0,.4);
+$color__error: #ff5a4c;
+$color__error-bg: rgba(255,0,0,.1);
+$color__border-focus: #32b0e5;
+
+$color__button_primary: $color__primary;
+$color__button_primary_text: #ffffff;
+$color__button_success: $color__success;
+$color__button_success_text: #ffffff;
+$color__button_danger: $color__danger;
+$color__button_danger_text: #ffffff;
+$color__button_utp: #c02222;
+$color__button_utp_text: #ffffff;
+
+
+
+$color__layout-top: #ffffff;
+$color__layout-top_shadow: darken($color__bg_inner, 15%);
+$color__layout-top_border: darken($color__bg_inner, 20%);
+$color__layout-bottom_active-tab: #ffffff;
+
+
+// Размеры
+$height__wrapper-min: 500px;
+$height__layout-bottom: 40px;
+$height__layout-bottom__span_padding: 4px;
+$width__tab: 220px;
+$width__top_menu: 50px;
+
+// Тени
+$form-shadow: 0 20px 40px $color__form-shadow;
+
+// Изображения
+$sprite: url('/include/img/ui_sprite.png');
+$sprite_draggable: url('/include/img/ui_sortable.png');
+
+// Миксины
+@mixin shadow($opts) {
+    -webkit-box-shadow: $opts;
+    -moz-box-shadow: $opts;
+    -o-box-shadow: $opts;
+    -ms-box-shadow: $opts;
+    box-shadow: $opts;
+}
+@mixin border-radius($opts) {
+    -webkit-border-radius: $opts;
+    -moz-border-radius: $opts;
+    -o-border-radius: $opts;
+    -ms-border-radius:$opts;
+    border-radius: $opts;
+}
+@mixin zero_pm() {
+    padding: 0;
+    margin: 0;
+}
+@mixin calc($property, $expression) { 
+    #{$property}: -moz-calc(#{$expression}); 
+    #{$property}: -o-calc(#{$expression}); 
+    #{$property}: -webkit-calc(#{$expression}); 
+    #{$property}: calc(#{$expression}); 
+}

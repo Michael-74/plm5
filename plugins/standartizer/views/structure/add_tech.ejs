@@ -1,0 +1,69 @@
+<div class="modal-header">
+    <h4 class="modal-title text-left"><i class="fal fa-abacus modal-icon"></i>&nbsp;Добавление тех. операции</h4>
+</div>
+<div class="modal-body">
+    <div class="tabs-container">
+        <form method="POST" action="/standartizer/structure/add_tech/<%=id%>" id="standartizer-section__addtech_form">
+            <div class="form-group">
+                <label>Номер операции</label>
+                <input type="number" min="0" value="0" name="num" required="required" />
+                <span class="help-block">Например: <i>10</i></span>
+            </div>
+
+            <div class="form-group">
+                <label>Наименование технической операции</label>
+                <input type="text" value="" name="name" required="required" />
+                <span class="help-block">Например: <i>Заготовка листового и прокатного металла</i></span>
+            </div>
+
+            <div class="form-group">
+                <label>Родительская операция</label>
+                <select name="parent" size="10" required="required" style="width: 100%;">
+                    <option selected="selected" value="0">отсутствует</option>
+                    <% for (let i in cats) { %>
+                        <% if (cats[i].parent_id == 0) { %>
+                            <%- include('cats_option', {items:cats, item:cats[i], add:'', num:cats[i].num+'.' }) %>
+                        <% } %>
+                    <% } %>
+                </select>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                    <button type="submit" class="btn btn-success">Добавить </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('#standartizer-section__addtech_form').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    success: function(data) {
+                        $.modal.close();
+                        if (data.ok == true) {
+                            swal({
+                                title: "Отлично!",
+                                text: "Новая операция добавлена!",
+                                type: "success"
+                            }, function () {
+                                Tabs.refreshTab(Tabs._currentTabId());
+                            });
+                        } else {
+                            swal("Опачки!", "Что-то пошло не так :)", "error");
+                        }
+                    }
+                });
+            },
+            rules: {
+                name: {
+                    required: true,
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,93 @@
+<div class="content_top__data">
+    <div class="filters">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label" for="search__box">Поиск</label>
+                    <div class="input-group">
+                        <input type="text" value="<%=qstr%>" name="search__box" class="form-control" placeholder="..." onkeyup="ManufactureList.fillSearch(this, event);">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-hover table-sticky">
+        
+        <thead class="top_0 table__head"> 
+            <tr>
+                <% if (access.includes('manufacture:edit')) { %>
+                <th width="30" class="text-center"></th>
+                <% } %>
+                <th data-sort="num" width="50" class="text-center">№</th>
+                <th class="text-left">Описание (Примечание)</th>
+                <th data-sort="shipment_date" width="100" class="text-center">План. дата отгрузки</th>
+                <th width="100" class="text-center">Дата начала производства</th>
+                <th width="100" class="text-center">Дата готовности станциии</th>
+                <th width="30" class="text-center">Статус</th>
+                <th width="75" class="text-center">Фонд чел/час</th>
+                <th width="75" class="text-center">Выполнено чел/час</th>
+                <th width="100" class="text-center">% выполнения</th>
+                <th width="120" class="text-center">Просрочка в часах</th>
+            </tr>
+        </thead>
+        <tbody class="table__tbody">
+            <% items.forEach(function(item){ %>
+                <%- include('item', {item: item}) %>
+            <% }) %>
+        </tbody>
+        
+    </table>
+    <input type="hidden" name="sortVal" value="<%=sort[0]%>" />
+    <input type="hidden" name="sortDir" value="<%=sort[1]%>" />
+</div>
+<script>
+    var sort = {
+        val: '<%=sort[0]%>',
+        dir: '<%=sort[1]%>'
+    }
+
+    $(function(){
+        $('.tab.tab-active .table__head tr th').each(function(index, el) {
+            var srt = $(el).data('sort');
+            if (typeof srt != 'undefined') {
+                $(el).attr('onclick','ManufactureList.changeSort(this);');
+                $(el).addClass('cansort');
+            }
+        });
+    });
+
+
+    var ManufactureList = {
+        resort() {
+            let sortval = $('.tab.tab-active input[name="sortVal"]').val()
+            let sortdir = $('.tab.tab-active input[name="sortDir"]').val()
+            let qstr = $('.tab.tab-active input[name="search__box"]').val()
+            let search_fields = {
+                sort: sortval,
+                dir: sortdir,
+                qstr: qstr.toLowerCase()
+            }
+            Cookies.set('manufacture', JSON.stringify(search_fields))
+            Tabs._updateCurrent('?sort='+sortval+'&dir='+sortdir+'&qstr='+qstr.toLowerCase())
+            
+        },
+        fillSearch(th, e) {
+            if (e.keyCode === 13) {
+                ManufactureList.resort();
+            }
+        },
+        changeSort(th) {
+            var srt = $(th).data('sort');
+            if (sort.val == srt) {
+                $('.tab.tab-active input[name="sortDir"]').val((sort.dir=='desc'?'asc':'desc'));
+            } else {
+                $('.tab.tab-active input[name="sortVal"]').val(srt);
+                $('.tab.tab-active input[name="sortDir"]').val('desc');
+            }
+            ManufactureList.resort();
+        },
+    }
+
+
+
+</script>

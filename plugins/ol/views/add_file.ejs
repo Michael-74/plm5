@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <h4 class="modal-title text-left"><i class="fal fa-file-plus modal-icon"></i>&nbsp;Добавление приложения</h4>
+</div>
+<div class="modal-body">
+    <div class="tabs-container">
+        <form method="POST" action="/ol/files/add/<%=id%>" id="ol-files__add_form" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Файлы</label>
+                <input type="file" name="files" required="required" multiple />
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                    <button type="submit" class="btn btn-success">Загрузить </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('#ol-files__add_form').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    success: function(data) {
+                        $.modal.close();
+                        if (data.ok == true) {
+                            swal({
+                                title: "Отлично!",
+                                text: "Файл успешно добавлен!",
+                                type: "success"
+                            }, function () {
+                                Tabs.refreshTab(Tabs._currentTabId());
+                            });
+                        } else {
+                            swal("Опачки!", "Что-то пошло не так :)", "error");
+                        }
+                    }
+                });
+            },
+            rules: {
+                files: {
+                    required: true,
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,127 @@
+<div class="modal-header">
+    <h4 class="modal-title text-left"><i class="fal fa-user-plus modal-icon"></i>&nbsp;Добавление пользователя</h4>
+</div>
+<div class="modal-body">
+    <div class="tab-content">
+        <input type="radio" class="tabselector" checked name="tab" id="tab1">
+        <label class="tabselector_label" for="tab1">Локальный пользователь</label>
+
+        <input type="radio"  class="tabselector" name="tab" id="tab2">
+        <label class="tabselector_label" for="tab2">Авторизация домена</label>
+
+        <div id="add_direct" class="tab-pane">
+            <div class="panel-body">
+                <form method="POST" action="/users/users/add" id="users__add_form">
+                    <div class="form-group">
+                        <label>Электронная почта </label>
+                        <input class="form-control" name="email" type="email" required="required">
+                        <span class="help-block m-b-none">Например: <i>ifk@crcr.ru</i></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Имя </label>
+                        <input class="form-control" name="name" type="text" required="required">
+                        <span class="help-block m-b-none">Например: <i>Иван Федорович Крузенштерн</i></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль </label>
+                        <input class="form-control" name="password" type="password" required="required">
+                        <span class="help-block m-b-none">Например: <i>jhg&002!2kkm3KJK11</i></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Роли пользователя</label>
+                        <ul class="form_switch-list">
+                            <% for (let i in groups) { %>
+                            <li><input class="switch-button" name="group[]" value="<%=i%>" type="checkbox" /> — <%=groups[i]%></li>
+                            <% } %>
+                        </ul>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 text-right">
+                            <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                            <button type="submit" class="btn btn-success">Добавить </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="add_ad" class="tab-pane">
+            <div class="panel-body">
+                <form method="POST" action="/users/users/addAD" id="users__addad_form">
+                    <div class="form-group">
+                        <label>Пользователь </label>
+                        <select name="user_id" class="selectized_input form-control">
+                            <% for (let i in ad_data) { %>
+                            <option value="<%=ad_data[i].id%>"><%=ad_data[i].fio%> (<%=ad_data[i].login%>)</option>
+                            <% } %>
+                        </select>
+                        <span class="help-block m-b-none">Например: <i>Иван Федорович Крузенштерн (ikruz)</i></span>
+                    </div>
+        
+                    <div class="form-group">
+                        <label>Роли пользователя</label>
+                        <ul class="form_switch-list">
+                            <% for (let i in groups) { %>
+                            <li><input class="switch-button" name="group[]" value="<%=i%>" type="checkbox" /> — <%=groups[i]%></li>
+                            <% } %>
+                        </ul>
+        
+                    </div>
+        
+                    <div class="row">
+                        <div class="col-sm-12 text-right">
+                            <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                            <button type="submit" class="btn btn-success">Добавить </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('.selectized_input').select2();
+        
+        $('#users__add_form').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    success: function(data) {
+                        $.modal.close();
+                        if (data.ok == true) {
+                            swal({
+                                title: "Отлично!",
+                                text: "Новый пользователь создан!",
+                                type: "success"
+                            }, function () {
+                                Tabs.refreshTab(Tabs._currentTabId());
+                            });
+                        } else {
+                            swal("Опачки!", "Что-то пошло не так :)", "error");
+                        }
+                    }
+                });
+            }
+        });
+        $('#users__addad_form').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    success: function(data) {
+                        $.modal.close();
+                        if (data.ok == true) {
+                            swal({
+                                title: "Отлично!",
+                                text: "Новый пользователь создан!",
+                                type: "success"
+                            }, function () {
+                                Tabs.refreshTab(Tabs._currentTabId());
+                            });
+                        } else {
+                            swal("Опачки!", "Что-то пошло не так :)", "error");
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>

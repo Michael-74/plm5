@@ -1,0 +1,34 @@
+<div class="modal-header">
+    <h4 class="modal-title text-left">Выбор начальной даты</h4>
+</div>
+<div class="modal-body">
+    <div class="tabs-container">
+        <form method="GET" action="/standartizer/list/calc_modal/<%=station_id%>" id="standartizer-tmpcalc_form">
+
+            <div class="form-group">
+                <label>Дата начала расчета</label>
+                <input type="date" name="date" value="<%-today%>" required="required" />
+                <span class="help-block">Например: <i>31.13.3113</i></span>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                    <button type="submit" class="btn btn-primary">Рассчитать </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('#standartizer-tmpcalc_form').validate({
+            submitHandler: function(form) {
+                var date = $(form).find('input[name="date"]').val();
+                $.modal.close();
+                Tabs.sameTab('/standartizer/list/calc_modal_calendar/<%=station_id%>/'+date);
+            }
+        });
+    });
+</script>

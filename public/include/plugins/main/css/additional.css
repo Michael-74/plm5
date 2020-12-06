@@ -1,0 +1,38 @@
+.progressDone {
+    height: 30px;
+}
+.progressDone:before {
+    content: attr(value)'%';
+    display: block;
+    margin: 0 auto;
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+    font-size: 0.8em;
+}
+div.tab[plugin="manufacture"] .table-sticky thead > tr > th {
+    position: sticky;
+    z-index: 2;
+}
+div.tab[plugin="manufacture"] .table-sticky thead.top_0 > tr > th {
+    top: 0px;
+}
+div.tab[plugin="manufacture"] .table-sticky thead.top_52 > tr > th {
+    top: 52px;
+}
+div.tab[plugin="manufacture"] .table-sticky thead.top_37 > tr > th {
+    top: 37px;
+}
+div.tab[plugin="manufacture"] .table-sticky-bottom {
+    position: sticky;
+    bottom: 0px;
+    z-index: 3;
+}
+.table.table-sticky-bottom thead>tr>th {
+    height: 50px;
+    border-bottom: 0px;
+    border-top: 2px solid #DDDDDD;
+}
+.switch-button-div {
+    margin: 5px 0px;
+}

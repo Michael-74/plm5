@@ -1,0 +1,63 @@
+<div class="content_top__data">
+    <div class="list-group nested-sortable_table" group-id="0">
+        <% for (let i in items) { %>
+            <% if (items[i].parent_id == 0) { %>
+                <%- include('item', {items:items, item:items[i]}) %>
+            <% } %>
+        <% } %>
+    </div>
+</div>
+<script>
+        // dragula([document.querySelector('.table__tbody_smk-structure')], {
+    //     direction: 'vertical',
+    //     moves: function (el, container, handle) {
+    //         return handle.classList.contains('drag_sortable');
+    //     }
+    // }).on('dragend', function(el) {
+    //     OlSections.reSort();
+    // });
+
+    var nestedSortables = [].slice.call(document.querySelectorAll('.nested-sortable_table'));
+    // Loop through each nested sortable element
+    for (var i = 0; i < nestedSortables.length; i++) {
+        new Sortable(nestedSortables[i], {
+            handle: '.drag_sortable', // handle's class
+            group: 'nested',
+            animation: 150,
+            fallbackOnBody: true,
+            swapThreshold: 0.65,
+            onSort: function(ev) {
+                var id = parseInt($(ev.item).attr('data-id'));
+                var parent = parseInt($(ev.to).attr('group-id'));
+                SmkStructure.changeParent(id, parent);
+                // console.log('item: '+$(ev.item).attr('data-id')+' to: '+$(ev.to).attr('group-id'));
+                // console.log('item: '+$(ev.item).attr('data-id')+' from: '+$(ev.from).attr('group-id')+' to: '+$(ev.to).attr('group-id'));
+                // console.log(this.toArray());
+                var order = this.toArray();
+                SmkStructure.reOrder(order.join(','));
+            }
+        });
+    }
+
+    var SmkStructure = {
+        deleteSection(id) {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить выбранный раздел?', 'Нет', 'Да, удалить!', function() {
+                $.get('/smk/structure/delete/'+id, function(data) {
+                    if (data.ok === true) {
+                        $('.tab-active .smk-structure__item[data-id="'+id+'"]').remove();
+                    }
+                },'json')
+            });
+        },
+        reOrder(order) {
+            $.get('/smk/structure/changeorder/'+order, function(data) {
+
+            },'json')
+        },
+        changeParent(id, parent) {
+            $.get('/smk/structure/changeparent/'+id+'/'+parent, function(data) {
+
+            },'json')
+        }
+    }
+</script>

@@ -1,0 +1,257 @@
+<% 
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%> 
+<div class="content_top__data">
+    <form method="POST" action="/standartizer/list/edit/<%= id %>" id="editListStandartize__save_form">
+        <table class="table table-striped table-hover">
+            <thead class="table__thead-closed standartizer_edit_thead" data-section="0">
+                <tr class="text-bold" style="line-height:40px;">
+                    <th colspan="7" class="text-left" style="background-color: #ffffff;">
+                        Общие данные
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="table__tbody standartizer_edit_tbody" data-section="0">
+                <tr class="section_params_tr">
+                    <td colspan="7">
+                        <div>
+                            <span class="null_section_span">Номер станции</span>
+                            <input type="text" value="<%=station_data.num%>" name="num" required="required" />
+                            <% if (ol_id != false) { %>
+                            &nbsp;<a onclick="Tabs.newTab('/ol/view_ol/<%=ol_id%>');return false;" href="/ol/view_ol/<%=ol_id%>"><i class="far fa-link"></i></a>
+                            <% } %>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="section_params_tr">
+                    <td colspan="7">
+                        <div>
+                            <span class="null_section_span">Описание</span> 
+                            <input style="width:calc(100% - 130px);" type="text" value="<%=station_data.description%>" name="description" required="required" />
+                        </div>
+                    </td>
+                </tr>
+                <tr class="section_params_tr">
+                    <td colspan="7">
+                        <div>
+                            <span class="null_section_span">Дата отгрузки</span> 
+                            <input type="date" value="<%=station_data.shipment_date%>" name="shipment_date" required="required" />
+                        </div>
+                    </td>
+                </tr>
+                <tr class="section_params_tr">
+                    <td colspan="7">
+                        <div>
+                            <span class="null_section_span">Примечание</span> 
+                            <input style="width:calc(100% - 130px);" type="text" value="<%=station_data.note%>" name="note" />
+                        </div>
+                    </td>
+                </tr>
+                <tr class="section_params_tr">
+                    <td colspan="7">
+                        <div>
+                            <span class="null_section_span">Комментарии / Заметки</span> 
+                            <textarea name="comment" style="width:calc(100% - 130px);"><%=station_data.comment %></textarea>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-striped table-hover table-sticky">
+            <thead class="top_0">
+                <tr class="standartizer_edit_listth">
+                    <th colspan="2" class="text-left" style="min-width:450px;">№&nbsp;&nbsp;&nbsp;Наименование операции</th>
+                    <th width="90" class="text-center">Кол-во рабочих</th>
+                    <th width="145" class="text-center">Кол-во смен послед. (шт / час)</th>
+                    <th width="130" class="text-center">Кол-во смен параллельно (шт / час)</th>
+                    <th width="100" class="text-center">чел/смен по операциям</th>
+                    <th width="125" class="text-right">Итого ЗП, руб.</th>
+                </tr>
+            </thead>
+        <% for (let i in cats) { %>
+            <% if (cats[i].parent_id == 0) { %>
+                <%- include('edit_cats', {items:cats, item:cats[i], data:data}) %>
+            <% } %>
+        <% } %>
+        </table>
+        
+        <table class="table table-striped table-hover table-sticky-bottom">
+            <thead>
+                <tr class="standartizer_edit_listth">
+                    <th colspan="2" class="text-right">Итого:</th>
+                    <th width="90" class="text-center">
+                        <span class="itogo-summ" data-num="0">
+                            <% if (parseFloat(cats.all_summ[0]) > 0) { %>
+                                <%- format(parseFloat(cats.all_summ[0]), 0, 3, ' ', ',') %>
+                            <% } %>
+                        </span>
+                    </th>
+                    <th width="145" class="text-center">
+                        <span class="itogo-summ" data-num="1">
+                            <% if (parseFloat(cats.all_summ[1]) > 0) { %>
+                                <%- format(parseFloat(cats.all_summ[1]), 2, 3, ' ', ',') %>
+                            <% } %>
+                        </span>&nbsp;|&nbsp;<span class="itogo-summ" data-num="2">
+                            <% if (parseFloat(cats.all_summ[2]) > 0) { %>
+                                <%- format(parseFloat(cats.all_summ[2]), 2, 3, ' ', ',') %>
+                            <% } %>
+                        </span>
+                    </th>
+                    <th width="130" class="text-center">
+                        <span class="itogo-summ" data-num="3">
+                            <% if (parseFloat(cats.all_summ[3]) > 0) { %>
+                                <%- format(parseFloat(cats.all_summ[3]), 2, 3, ' ', ',') %>
+                            <% } %>
+                        </span>&nbsp;|&nbsp;<span class="itogo-summ" data-num="4">
+                            <% if (parseFloat(cats.all_summ[4]) > 0) { %>
+                                <%- format(parseFloat(cats.all_summ[4]), 2, 3, ' ', ',') %>
+                            <% } %>
+                        </span>
+                    </th>
+                    <th width="100" class="text-center"><span class="itogo-summ" data-num="5">
+                        <% if (parseFloat(cats.all_summ[5]) > 0) { %>
+                            <%- format(parseFloat(cats.all_summ[5]), 2, 3, ' ', ',') %>
+                        <% } %>
+                    </span></th>
+                    <th width="125" class="text-right"><span class="itogo-summ" data-num="6">
+                        <% if (parseFloat(cats.all_summ[6]) > 0) { %>
+                            <%- format(parseFloat(cats.all_summ[6]), 2, 3, ' ', ',') %> руб.
+                        <% } %>
+                    </span></th>
+                </tr>
+            </thead>
+        </table>
+    </form>
+</div>
+<script>
+    $(function() {
+        $('.tab-active #editListStandartize__save_form').submit(function(e) {
+            var pdata = $(this).serializeArray();
+            $.post('/standartizer/list/edit/<%= id %>', pdata, function(answer) {
+                if (answer.ok === true) {
+                    DSH.showInfo('Сохранение', 'Данные успешно сохранены!');
+                    Tabs._unsetUnsaved();
+                } else {
+                    DSH.showInfo('Опачки!', 'Что-то пошло не так :)');
+                }
+            }, 'json');
+            e.preventDefault();
+        });
+    });
+    var StandartizeEditList = {
+        autosaveState(th) {
+            Cookies.set('autosave', ($(th).prop('checked') == true ? 'true' : 'false'))
+        },
+        autosave() {
+            var ass = ( typeof Cookies.get('autosave') == 'undefined' ? false : (Cookies.get('autosave') == 'true' ? true : false) );  // ASS (Auto Save State)
+            if (ass) {
+                StandartizeEditList.saveChanges();
+            }
+        },
+        saveChanges() {
+            $('.tab-active #editListStandartize__save_form').submit();
+        },
+        toggleBody(e) {
+            var thead = $(e).closest('thead');
+            var tbody = $(e).closest('thead').next();
+            if (tbody.hasClass('table__tbody-closed') == true) {
+                tbody.removeClass('table__tbody-closed');
+                thead.removeClass('table__thead-closed');
+            } else {
+                tbody.addClass('table__tbody-closed');
+                thead.addClass('table__thead-closed');
+            }
+        },
+        detectKeyup(e) {
+            if (e.keyCode === 13) {
+                $(e.target).closest('.section_params_tr').next('.section_params_tr').find('input[data-type="'+$(e.target).data('type')+'"]').focus();
+            }
+        },
+        recalcSum(th, id) {
+            Tabs._setUnsaved();
+            StandartizeEditList.autosave();
+            var type = $(th).data('type');
+            var closest_tr = $(th).closest('.section_params_tr');
+            if (type == 2) {
+                $(closest_tr).find('input[data-type="3"]').val(parseFloat(parseFloat($(th).val()) * parseInt($(closest_tr).data('wl'))).toFixed(2));
+            } else if (type == 3) {
+                $(closest_tr).find('input[data-type="2"]').val(parseFloat( parseFloat($(th).val()) / parseInt($(closest_tr).data('wl')) ).toFixed(2));
+            } else if (type == 4) {
+                $(closest_tr).find('input[data-type="5"]').val(parseFloat(parseFloat($(th).val()) * parseInt($(closest_tr).data('wl'))).toFixed(2));
+            } else if (type == 5) {
+                $(closest_tr).find('input[data-type="4"]').val(parseFloat( parseFloat($(th).val()) / parseInt($(closest_tr).data('wl')) ).toFixed(2));
+            }
+            StandartizeEditList.recalcSumById(id);
+            StandartizeEditList.recalcAll();
+        },
+        recalcSumById(id) {
+            Tabs._setUnsaved();
+            var closest_tr = $('.tab-active tr.section_params_tr[data-id="'+id+'"]');
+            // var inputs = $(tr).find('input.standartize_edit_input');
+            var v1 = parseInt($(closest_tr).find('input[data-type="1"]').val()) || 0;
+            var v2 = parseFloat($(closest_tr).find('input[data-type="2"]').val()) || 0;
+            var v3 = parseFloat($(closest_tr).find('input[data-type="3"]').val()) || 0;
+            var v4 = parseFloat($(closest_tr).find('input[data-type="4"]').val()) || 0;
+            var v5 = parseFloat($(closest_tr).find('input[data-type="5"]').val()) || 0;
+            var sum1 = parseFloat(v1*((v3+v5)/parseInt($(closest_tr).data('wl'))));
+            var sum2 = parseFloat(parseFloat($(closest_tr).data('ap')) * parseInt($(closest_tr).data('wl')) * sum1);
+            $(closest_tr).find('.sum1').html(sum1.toFixed(2));
+            $(closest_tr).find('.sum2').html(sum2.format(2, 3, ' ', ',')+' руб.');
+            $(closest_tr).find('input[data-type="6"]').val(sum1.toFixed(2));
+            $(closest_tr).find('input[data-type="7"]').val(sum2.toFixed(2));
+        },
+        recalcAll() {
+            var allsum = [0,0,0,0,0,0,0];
+            var all_sections = $('.tab-active .standartizer_edit_tbody');
+            for (let j = 0; j < all_sections.length; j++) {
+                var catsum = [0,0,0,0,0,0,0];
+                var cur_section = $(all_sections[j]);
+                var section_id = cur_section.data('section');
+                var cthead = $('.standartizer_edit_thead[data-section="'+section_id+'"]');
+                var thead_sum = [
+                    cthead.find('.sum2_workers'),
+                    cthead.find('.sum2_pos1'),
+                    cthead.find('.sum2_pos2'),
+                    cthead.find('.sum2_par1'),
+                    cthead.find('.sum2_par2'),
+                    cthead.find('.sum2_chsop'),
+                    cthead.find('.sum2_group'),
+                ];
+                var sum_end = ['','','','','','',' руб.'];
+                var cur_section_rows = cur_section.find('tr.section_params_tr.fullfilled');
+                for (let i = 0; i < cur_section_rows.length; i++) {
+                    for (let k = 1; k <= 7; k++) {
+                        var data = parseFloat($(cur_section_rows[i]).find('input[data-type="'+k+'"]').val());
+                        if (data > 0 && data != 'NaN') {
+                            catsum[k-1] = parseFloat(catsum[k-1]) + data;
+                            allsum[k-1] = parseFloat(allsum[k-1]) + data;
+                        }
+                    }
+                }
+                for (let i in catsum) {
+                    if (parseFloat(catsum[i]) > 0) {
+                        if (i == 0) $(thead_sum[i]).html(catsum[i].format(0, 3, ' ', ',')+sum_end[i]);
+                        else $(thead_sum[i]).html(catsum[i].format(2, 3, ' ', ',')+sum_end[i]);
+                    }
+                }
+                
+            }
+            for (let i in allsum) {
+                if (parseFloat(allsum[i]) > 0) {
+                    if (i == 0) {
+                        $('.tab-active .table-sticky-bottom span.itogo-summ[data-num="0"]').html(allsum[0].format(0, 3, ' ', ','));
+                        console.log(allsum[0]);
+                    } else {
+                        $('.tab-active .table-sticky-bottom span.itogo-summ[data-num="'+i+'"]').html(allsum[i].format(2, 3, ' ', ',')+sum_end[i]);
+                    }
+                }
+            }
+            var r_allsum = allsum[6].format(2, 3, ' ', ',')+' руб.';
+        }
+    }
+</script>

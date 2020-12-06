@@ -1,0 +1,75 @@
+<% 
+if ((data != null && typeof data[item.id] != 'undefined' && parseFloat(data[item.id].val7) || (parseFloat(item.childsum[6]) > 0)) > 0) {
+
+
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%>
+<tr class="section_params_tr<%-(item.childs.length == 0 ? ' fullfilled' : '')%>" data-id="<%-item.id%>" data-ap="<%= item.average_payment %>" data-wl="<%= item.work_long %>">
+    <td class="text-left standartizer_list_num_td"><nobr><%-item.levels.join('.')+'.'%></nobr></td>
+    <td class="text-left" <%-(item.childs.length == 0? '':'colspan="7"')%>>
+        <div><% if (item.otk == 1) { %><a class="hint--right" aria-label="контроль ОТК"><i class="fal fal fa-badge-check"></i></a> <% } %><%= item.name %></div>
+        <% if (item.childs.length == 0) { %>
+        <div class="section_descr"><span>Продолжительность рабочей смены: <%= item.work_long %></span></div>
+        <% } %>
+    </td>
+    <% if (item.childs.length == 0) { %>
+    <td class="text-center">
+        <%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val1 : '' )%>
+    </td>
+    <td class="text-center">
+        <%-operation_sum[item.id] %>
+    </td>
+    <td class="text-center"><%- (typeof calcops[item.id] != 'undefined' ? '<a rel="modal:open" href="/manufacture/operation_duration/'+station_id+'/'+item.id+'">'+calcops[item.id].minmax[0]+' — '+calcops[item.id].minmax[1]+'</a>' : 'нет') %></td>
+    <td class="text-center">
+        <% if (typeof calcops[item.id] != 'undefined') { %>
+            <% if (calcops[item.id].is_started == true) { %>
+                <% if (calcops[item.id].donediff > 0) { %>
+                    <i class="fal fa-exclamation-triangle text-danger"></i>
+                <% } else { %>
+                    <i class="fal fa-check-circle text-navy"></i>
+                <% } %>
+            <% } else { %>
+                <i class="fal fa-clock text-info"></i>
+            <% } %>
+        <% } else { %>
+            <i class="fal fa-check-circle text-navy"></i>
+        <% } %>
+    </td>
+       
+
+
+
+    <td class="text-center">
+        <progress class="progressDone" name="progressDone_<%-item.id%>" value="<%-parseInt(done[item.id] || 0)%>" max="100" style="width:250px;"></progress>
+    </td>
+    <td class="text-center">
+        <input type="number" onchange="ManufactureEditList.recalcProgressBar(this, <%-item.id%>);" step="1" min="0" max="100" value="<%-(done[item.id] || 0)%>" name="p:<%-item.id%>" /> %
+    </td> 
+    <td class="text-center">
+        <input type="number" style="width:58px;" onchange="ManufactureEditList.recalcProgressBarHours(this, <%-item.id%>);" step="0.1" min="0" value="<%-(done_hours[item.id] || 0)%>" name="s:<%-item.id%>" /> ч
+    </td> 
+    <% } else { %>
+    <td class="text-right">
+        
+    </td>
+    <% } %>
+</tr>
+<%
+    if (item.childs.length > 0) {
+        for (let j in item.childs) {
+%>
+            <%- include('edit_cats_inner', {calcops:calcops, done: done, station_id: station_id, operation_sum: operation_sum, items:items, item:items[item.childs[j]]}) %>
+<%
+        }
+    }
+%>
+
+
+<%
+}
+%>

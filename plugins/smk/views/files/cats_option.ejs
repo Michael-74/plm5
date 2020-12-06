@@ -1,0 +1,15 @@
+<option <%-(cat.includes(item.id)?'selected="selected"':'')%> value="<%=item.id%>"><%=add%><%=item.name%></option>
+<%
+if (item.childs.length > 0) {
+    let nadd = add+' — ';
+    for (let j in item.childs) {
+        let citem = items[item.childs[j]];
+%>
+    <%- include('cats_option', {items:items, item:citem, add:nadd, cat:cat}) %>
+<%
+    }
+} else {
+
+}
+%>
+ 

@@ -1,0 +1,144 @@
+<form method="POST" action="/ol/add" id="ol__add_form">
+    <div class="modal-header">
+        <h3 class="modal-title text-left"><i class="fal fa-layer-plus modal-icon"></i>&nbsp;&nbsp;<%=title%></h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Шаблон опросного листа</label>
+            <select name="tpl_id" class="selectized_input_tpl form-control" required="required">
+                <% for (let i in templates) { %>
+                <option value="<%=i%>"><%=templates[i].id%>. <%=templates[i].name%></option>
+                <% } %>
+            </select>
+            <span class="help-block">Например: <i>Шкаф управления электрообогревом </i></span>
+        </div>
+        <div class="form-group">
+            <label>Номер опросного листа</label>
+            <input type="text" class="ol_num" name="ol_num" value="<%=last_ol_num%>" />
+            <span class="help-block">Например: <i>ОЛ 2019/123 </i></span>
+        </div>
+        <div class="form-group">
+            <label>Полное наименование в РД</label>
+            <input type="text" value="" name="rd_fullname" required="required" />
+            <span class="help-block">Например: <i>Компрессорная станция </i></span>
+        </div>
+        <div class="form-group">
+            <label>Обозначение в РД</label>
+            <input type="text" value="CHZMEK-" name="rd_num" required="required" />
+            <span class="help-block">Например: <i>CHZMEK-CB-7,5-8 С </i></span>
+        </div>
+        <div class="form-group">
+            <label>Тип станции</label>
+            <select name="type" class="selectized_input_pre form-control" required="required">
+                <% for (let i in pre.types) { %>
+                <option value="<%=pre.types[i]%>"><%=pre.types[i]%></option>
+                <% } %>
+            </select>
+            <span class="help-block">Например: <i>Насосная </i></span>
+        </div>
+        <div class="form-group">
+            <label>Подтип станции (назначение)</label>
+            <select name="sub_type" class="selectized_input_pre form-control" required="required">
+                <% for (let i in pre.subtypes) { %>
+                <option value="<%=pre.subtypes[i]%>"><%=pre.subtypes[i]%></option>
+                <% } %>
+            </select>
+            <span class="help-block">Например: <i>Перекачка нефти </i></span>
+        </div>
+        <div class="form-group">
+            <label>Заказчик</label>
+            <select name="customer" class="selectized_input_pre form-control" required="required">
+                <% for (let i in pre.customers) { %>
+                <option value="<%=pre.customers[i]%>"><%=pre.customers[i]%></option>
+                <% } %>
+            </select>
+            <span class="help-block">Например: <i>Роснефть </i></span>
+        </div>
+        <div class="form-group">
+            <label>Категория заказчика</label>
+            <select name="customer_cat" class="form-control" required="required">
+                <option value="1">1 категория</option>
+                <option value="2">2 категория</option>
+                <option value="3">3 категория</option>
+            </select>
+            <span class="help-block">Например: <i>1 категория </i></span>
+        </div>
+        <div class="form-group">
+            <label>Место установки станции</label>
+            <input type="text" name="place" />
+            <span class="help-block">Например: <i>Забайкальский край, Балейский район, 60 км от г.Балей </i></span>
+        </div>
+        <div class="form-group">
+            <label>Наименование проектного института</label>
+            <select name="project_inst" class="selectized_input_pre form-control" required="required">
+                <% for (let i in pre.pro_inst) { %>
+                <option value="<%=pre.pro_inst[i]%>"><%=pre.pro_inst[i]%></option>
+                <% } %>
+            </select>
+            <span class="help-block">Например: <i>Томскнипинефть </i></span>
+        </div>
+        <div class="form-group">
+            <label>Количество частей</label>
+            <input type="number" value="1" min="0" name="parts" required="required" />
+            <span class="help-block">Например: <i>100500 </i></span>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+        <button type="submit" class="btn btn-success">Создать</button>
+    </div>
+</form>
+
+<script>
+$(function(){
+    var year = new Date().getFullYear();
+    $('.selectized_input_tpl').select2();
+    $('.selectized_input_pre').select2({
+        tags: true,
+        selectOnBlur: true
+    });
+
+    $.jMaskGlobals = {
+        maskElements: 'input,td,span,div',
+        dataMaskAttr: '*[data-mask]',
+        dataMask: true,
+        watchInterval: 300,
+        watchInputs: true,
+        watchDataMask: false,
+        byPassKeys: [9, 16, 17, 18, 36, 37, 38, 39, 40, 91],
+        translation: {
+            '#': {pattern: /\d/, recursive: true},
+        }
+    };
+
+    $('.ol_num').mask('ОЛ 20##/#####', {
+        translation: {
+            '#': {
+                pattern: /[0-9*]/
+            }
+        },
+        placeholder: 'ОЛ '+year+'/_____'
+    });
+
+    $('#ol__add_form').validate({
+        submitHandler: function(form) {
+            $(form).ajaxSubmit({
+                success: function(data) {
+                    $.modal.close();
+                    if (data.ok === true) {
+                        swal({
+                            title: "Отлично!",
+                            text: "Новый опросный лист создан!",
+                            type: "success"
+                        }, function () {
+                            Tabs._updateCurrent();
+                        });
+                    } else {
+                        swal("Опачки!", "Что-то пошло не так :)", "error");
+                    }
+                }
+            });
+        }
+    })
+});
+</script>

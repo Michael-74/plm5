@@ -1,0 +1,46 @@
+<% 
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%>
+<div class="flex-list-group flex-list-group-opened<%-(item.childs.length > 0 ? ' fulfilled' : '')%>" data-id="<%=item.id%>">
+    <div class="flex-list-row-item" data-id="<%=item.id%>">
+        <div class="drag_sortable show_on_hover"></div>
+        <% if (access.includes('standartizer:editStructrue')) { %>
+        <div style="width: 26px; flex-grow: 0;" class="flgi-child text-center">
+            <% if (item.stype == 1) { %>
+                <a title="Редактировать опреацию" href="/standartizer/structure/edit/<%=item.id%>" rel="modal:open"><i class="fas fa-pencil-alt"></i></a>
+            <% } else { %>
+                <a title="Редактировать тех опреацию" href="/standartizer/structure/edit_tech/<%=item.id%>" rel="modal:open"><i class="fas fa-pencil-alt"></i></a>
+            <% } %>
+        </div>
+        <% } %>
+        <div class="flgi-child text-left"><span class="v__arrow"></span>&nbsp;&nbsp;<span class="standartizer-sku"><%-item.levels.join('.')+'.'%></span> <span onclick="StandartizerStructure.toggleList('<%=item.id%>');return false;" style="cursor:pointer;"><% if (item.otk == 1) { %><a class="hint--right" aria-label="контроль ОТК"><i class="fal fal fa-badge-check"></i></a> <% } %><%=item.name%></span></div>
+        <% if (item.stype == 1) { %>
+        <div style="width: 100px; flex-grow: 0; color:#666666;" class="flgi-child text-left"><%= format(item.average_payment,2,3,' ',',')%> руб.</div>
+        <div style="width: 50px; flex-grow: 0; color:#666666;" class="flgi-child text-center"><%=item.work_long%></div>
+        <% } %>
+        <% if (access.includes('standartizer:editStructrue')) { %>
+        <% if (colors) { %>
+        <div style="width: 50px; flex-grow: 0;" class="flgi-child text-center">
+            <input type="color" <%- (item.color?'value="'+item.color+'"':'') %> onchange="StandartizerStructure.changeColor(this, '<%= item.id %>'); return false;" class="standartizer_input_color" />
+        </div>
+        <% } %>
+        <div style="width: 30px; flex-grow: 0;" class="flgi-child text-center"><a title="Удалить операцию" href="#" onclick="StandartizerStructure.deleteSection('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a></div>
+        <% } %>
+    </div>
+    <div class="flex-list-col-item nested-flex" group-id="<%=item.id%>">
+    <%
+    if (item.childs.length > 0) { 
+        for (let j in item.childs) {
+    %>
+            <%- include('item2', {items:items, item:items[item.childs[j]], colors:false}) %>
+    <%
+        }
+    }
+    %>
+    </div>
+</div>

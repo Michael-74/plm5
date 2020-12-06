@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h4 class="modal-title text-left"><i class="fal fa-users-class modal-icon"></i>&nbsp;Редактирование тарифной ставки</h4>
+</div>
+<div class="modal-body">
+    <div class="tabs-container">
+        <form method="POST" action="/workers/chts/edit/<%=data.id%>" id="workers-chts__edit_form">
+
+            <div class="form-group">
+                <label>Должность</label>
+                <input type="text" value="<%=data.position%>" name="position" required="required" />
+                <span class="help-block">Например: <i>Человек-будильник</i></span>
+            </div>
+
+            <div class="form-group">
+                <label>Разряд</label>
+                <input type="number" value="<%=data.class%>" min="1" max="100" name="cls" required="required" />
+                <span class="help-block">Например: <i>2</i></span>
+            </div>
+
+            <div class="form-group">
+                <label>Стоимость часа, руб.</label>
+                <input type="number" step="0.01" min="0" value="<%=data.rate%>" name="rate" required="required">
+                <span class="help-block">Например: <i>201.73</i></span>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                    <button type="submit" class="btn btn-primary">Сохранить </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('#workers-chts__edit_form').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    success: function(data) {
+                        $.modal.close();
+                        if (data.ok == true) {
+                            swal({
+                                title: "Отлично!",
+                                text: "Тарифная ставка успешно отредактирована!",
+                                type: "success"
+                            }, function () {
+                                Tabs.refreshTab(Tabs._currentTabId());
+                            });
+                        } else {
+                            swal("Опачки!", "Что-то пошло не так :)", "error");
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>

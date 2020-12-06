@@ -1,0 +1,47 @@
+<ul class="content_top__menu">
+    <li class="active">Пользователи</li>
+    <li><a href="/users/groups" onclick="Tabs.sameTab('/users/groups');return false;">Роли пользователей</a></li>
+</ul>
+<div class="content_top__data">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th width="50">№</th>
+                <% if (access.includes('users:editSettings')) { %>
+                <th width="30"></th>
+                <% } %>
+                <th class="text-left">Имя пользователя</th>
+                <th class="text-left">Логин </th>
+                <th class="text-left">Роль</th>
+                <% if (access.includes('users:editSettings')) { %>
+                <th width="30" class="text-center">Статус</th>
+                <th width="30" class="text-center"></th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody class="table__tbody">
+            <% users_list.forEach(function(item){ %>
+                <%- include('item', {item: item, ad_state:ad_state}) %>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+<script>
+    var Settings_Users = {
+        changeState(th, id) {
+            var checked = ($(th).prop('checked') == true ? 1 : 0);
+            $.get('/users/users/state/'+id+'/'+checked, function(data) {
+                
+            }, 'json'); 
+        },
+        deleteUser(id) {
+            DSH.deleteConfirm('Вы уверены?', 'Вы точно хотите удалить выбранного пользователя? Все связанные с ним данные будут безвозвратно удалены!', 'Нет', 'Да, удалить!', function() {
+                $.get('/users/users/delete/'+id, function(data){
+                    if (data.ok === true) {
+                        $('.tab-active .user__item[data-id="'+id+'"]').remove();
+                    }
+                },'json')
+            });
+        }
+    }
+</script>

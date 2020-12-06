@@ -1,0 +1,93 @@
+<% 
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%> 
+<div class="content_top__data">
+    <table class="table table-striped table-hover table-sticky">
+        <thead class="top_0">
+            <tr class="standartizer_edit_listth">
+                <th colspan="2" class="text-left">№&nbsp;&nbsp;&nbsp;Наименование операции</th>
+                <th width="90" class="text-center">Кол-во рабочих</th>
+                <th width="145" class="text-center">Кол-во смен послед. (шт / час)</th>
+                <th width="130" class="text-center">Кол-во смен параллельно (шт / час)</th>
+                <th width="100" class="text-center">чел/смен по операциям</th>
+                <th width="125" class="text-right">Итого ЗП, руб.</th>
+            </tr>
+        </thead>
+        <% for (let i in cats) { %>
+            <% if (cats[i].parent_id == 0 && parseFloat(cats[i].allchildsum[0]) > 0) { %>
+                <%- include('view_cats', {items:cats, item:cats[i], data:data }) %>
+            <% } %>
+        <% } %>
+    </table>
+
+    <table class="table table-striped table-hover table-sticky-bottom">
+        <thead>
+            <tr class="standartizer_edit_listth">
+                <th colspan="2" class="text-right">Итого:</th>
+                <th width="90" class="text-center">
+                    <span class="itogo-summ" data-num="0">
+                        <% if (parseFloat(cats.all_summ[0]) > 0) { %>
+                            <%- format(parseFloat(cats.all_summ[0]), 0, 3, ' ', ',') %>
+                        <% } %>
+                    </span>
+                </th>
+                <th width="145" class="text-center">
+                    <span class="itogo-summ" data-num="1">
+                        <% if (parseFloat(cats.all_summ[1]) > 0) { %>
+                            <%- format(parseFloat(cats.all_summ[1]), 2, 3, ' ', ',') %>
+                        <% } %>
+                    </span>&nbsp;|&nbsp;<span class="itogo-summ" data-num="2">
+                        <% if (parseFloat(cats.all_summ[2]) > 0) { %>
+                            <%- format(parseFloat(cats.all_summ[2]), 2, 3, ' ', ',') %>
+                        <% } %>
+                    </span>
+                </th>
+                <th width="130" class="text-center">
+                    <span class="itogo-summ" data-num="3">
+                        <% if (parseFloat(cats.all_summ[3]) > 0) { %>
+                            <%- format(parseFloat(cats.all_summ[3]), 2, 3, ' ', ',') %>
+                        <% } %>
+                    </span>&nbsp;|&nbsp;<span class="itogo-summ" data-num="4">
+                        <% if (parseFloat(cats.all_summ[4]) > 0) { %>
+                            <%- format(parseFloat(cats.all_summ[4]), 2, 3, ' ', ',') %>
+                        <% } %>
+                    </span>
+                </th>
+                <th width="100" class="text-center"><span class="itogo-summ" data-num="5">
+                    <% if (parseFloat(cats.all_summ[5]) > 0) { %>
+                        <%- format(parseFloat(cats.all_summ[5]), 2, 3, ' ', ',') %>
+                    <% } %>
+                </span></th>
+                <th width="125" class="text-right"><span class="itogo-summ" data-num="6">
+                    <% if (parseFloat(cats.all_summ[6]) > 0) { %>
+                        <%- format(parseFloat(cats.all_summ[6]), 2, 3, ' ', ',') %> руб.
+                    <% } %>
+                </span></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script>
+    var StandartizeViewList = {
+        toggleBody(e) {
+            // .if_table__tbody-closed
+            // .if_table__tbody-opened
+            var thead = $(e).closest('thead');
+            var tbody = $(e).closest('thead').next();
+            if (tbody.hasClass('table__tbody-closed') == true) {
+                tbody.removeClass('table__tbody-closed');
+                thead.removeClass('table__thead-closed');
+
+            } else {
+                tbody.addClass('table__tbody-closed');
+                thead.addClass('table__thead-closed');
+                
+            }
+        }
+    }
+</script>

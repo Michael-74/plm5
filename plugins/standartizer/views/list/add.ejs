@@ -1,0 +1,81 @@
+<div class="modal-header">
+        <h4 class="modal-title text-left"><i class="fal fa-abacus modal-icon"></i>&nbsp;Добавление станции для рачета</h4>
+    </div>
+    <div class="modal-body">
+        <div class="tabs-container">
+            <form method="POST" action="/standartizer/list/add" id="standartizer-list__add_form">
+
+                <div class="form-group">
+                    <label>Группа операций</label>
+                    <select name="group_id" class="selectized_input_tpl form-control" required="required">
+                        <% for (let i in groups) { %>
+                            <option value="<%-groups[i].id%>"><%-groups[i].name%></option>
+                        <% } %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Номер станции</label>
+                    <input type="text" name="num" required="required" />
+                    <span class="help-block">Например: <i>100500</i></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Дата отгрузки</label>
+                    <input type="date" name="shipment_date" required="required" />
+                    <span class="help-block">Например: <i>31.13.3113</i></span>
+                </div>
+    
+                <div class="form-group">
+                    <label>Описание</label>
+                    <input type="text" value="" name="description" required="required" />
+                    <span class="help-block">Например: <i>Какое-то описание</i></span>
+                </div>
+    
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                        <button type="submit" class="btn btn-success">Добавить </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        $(function(){
+            $('.selectized_input_tpl').select2();
+
+            $('#standartizer-list__add_form').validate({
+                submitHandler: function(form) {
+                    $(form).ajaxSubmit({
+                        success: function(data) {
+                            $.modal.close();
+                            if (data.ok == true) {
+                                swal({
+                                    title: "Отлично!",
+                                    text: "Новая станция добавлена!",
+                                    type: "success"
+                                }, function () {
+                                    Tabs.refreshTab(Tabs._currentTabId());
+                                });
+                            } else {
+                                swal("Опачки!", "Что-то пошло не так :)", "error");
+                            }
+                        }
+                    });
+                },
+                rules: {
+                    num: {
+                        required: true,
+                        remote: '/standartizer/list/uniq'
+                    }
+                },
+                messages: {
+                    num:{
+                        remote: 'Станция с таким номером уже существует!'
+                    }
+                },
+            });
+        });
+    </script>

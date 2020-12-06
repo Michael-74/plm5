@@ -1,0 +1,42 @@
+.workers_brigades_th {
+    line-height: 40px;
+}
+
+.month_view {
+    width: 440px;
+    &.view_rest {
+        .fc-day {
+            &:not(.fc-disabled-day) {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.fc-highlight {
+    background: #000000;
+    opacity: 0.3;
+}
+
+.line_legend {
+    font-size: 0.9em;
+    margin-top: 10px;
+    .line_legend_color {
+        width: 25px;
+        height: 16px;
+        border: 1px solid #dddddd;
+        display: inline-block;
+        vertical-align: middle;
+        &.bg_light_red {
+            background-color: #ffe2e2;
+        }
+        &.bg_light_green {
+            background-color: #e6f6e4;
+        }
+    }
+}
+
+.table thead.standartizer_sub_thead > tr > th {
+    background-color: #eeeeee;
+    
+}

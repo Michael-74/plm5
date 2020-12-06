@@ -1,0 +1,24 @@
+<% 
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%>
+
+<tr class="workers_chts__item" data-id="<%= item.id %>">
+    <% if (access.includes('workers:edit_chts')) { %>
+    <td class="text-center">
+        <a href="/workers/chts/edit/<%= item.id %>" rel="modal:open"><i class="fas fa-pencil-alt"></i></a>
+    </td>
+    <% } %>
+
+    <td class="text-left"><%=item.position%></td>
+    <td class="text-center"><%=item.class%> разряд</td>
+    <td class="text-center"><%= format(item.rate,2,3,' ',',')%></td>
+    
+    <% if (access.includes('workers:delete_chts')) { %>
+    <td class="text-center"><a title="Удалить тарифную ставку" href="#" onclick="Workers_Chts.deletChtsItem('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a></td>
+    <% } %>
+</tr>

@@ -1,0 +1,10 @@
+<tr class="journal__list" data-id="<%= item.id %>" data-plugin="<%-item.plugin%>">
+    <td class="text-center"><%= item.date %></td>
+    <td class="text-center"><%= item.time %></td>
+    <td class="text-left"><%- (typeof users[item.user_id] != 'undefined' ? users[item.user_id].first_name : 'ID: '+item.user_id) %></td>
+    <td class="text-left"><%- post_data.events[item.id] %></td>
+    <% if (access.includes('journal:edit')) { %>
+    <td class="text-center"><a title="Удалить событие" href="/journal/delete/<%= item.id %>" onclick="Journal.deleteLog('<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a></td>
+    <% } %>
+</tr>
+        

@@ -1,0 +1,101 @@
+<% 
+function format(o, n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = o.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+}
+%>
+<tr class="section_params_tr<%-(item.childs.length == 0 ? ' fullfilled' : '')%>" data-id="<%-item.id%>" data-ap="<%= item.average_payment %>" data-wl="<%= item.work_long %>">
+        <%
+        let nbsp_num = '';
+        if (item.levels.length > 2) {
+            let cnt = item.levels.length - 2;
+            for (let i = 0; i < cnt; i++) {
+                nbsp_num += '&nbsp;&nbsp;&nbsp;';
+            }
+        }
+        %>
+        <td width="30" class="text-left standartizer_list_num_td"><nobr><%-item.levels.join('.')+'.'%></nobr></td>
+        <td class="text-left" <%-(item.childs.length == 0? '':'colspan="5"')%>>
+            <div><%= item.name %></div>
+            <% if (item.stype == 1) { %>
+                <% if (item.childs.length == 0) { %>
+                <div class="section_descr">
+                    <span>
+                        Средняя ЗП: 
+                        <% if (access.includes('standartizer:editStructrue')) { %>
+                            <a tabIndex="-1" class="shadowed ap_cont" href="/standartizer/structure/edit_ap/<%-item.id%>" rel="modal:open"><%= item.average_payment %> руб.</a>
+                        <% } else { %>
+                            <%= item.average_payment %> руб.
+                        <% } %>
+                    </span>
+                </div>
+                <div class="section_descr">
+                    <span>
+                        Продолжительность рабочей смены: 
+                        <% if (access.includes('standartizer:editStructrue')) { %>
+                        <a tabIndex="-1" class="shadowed wl_cont" href="/standartizer/structure/edit_ap/<%-item.id%>" rel="modal:open"><%= item.work_long %></a>
+                        <% } else { %>
+                        <%= item.work_long %>
+                        <% } %>
+                    </span>
+                </div>
+                <% } %>
+            <% } else { %>
+                <div class="section_descr"><span>Техническая операция</span></div>
+            <% } %>
+        </td>
+        <% if (item.childs.length == 0) { %>
+            <% if (item.stype == 1) { %>
+                <td class="text-center">
+                    <input class="standartize_edit_input" onchange="StandartizeEditList.recalcSum(this, '<%-item.id%>');" onkeyup="StandartizeEditList.detectKeyup(event);" style="width:40px;" data-type="1" type="number" step="1" min="0" name="val_<%-item.id%>_1" value="<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val1 : '' )%>" />
+                </td>
+                <td class="text-center" style="<%-(item.parallel == 1 ? '' : 'background-color: rgba(235, 235, 235, 0.7);')%>">
+                    <input class="standartize_edit_input" onchange="StandartizeEditList.recalcSum(this, '<%-item.id%>');" onkeyup="StandartizeEditList.detectKeyup(event);" style="width:50px;" data-type="2" type="number" step="0.01" min="0" name="val_<%-item.id%>_2" value="<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val2 : '' )%>" />
+                    <input class="standartize_edit_input" onchange="StandartizeEditList.recalcSum(this, '<%-item.id%>');" onkeyup="StandartizeEditList.detectKeyup(event);" style="width:55px;" data-type="3" type="number" step="0.01" min="0" name="val_<%-item.id%>_3" value="<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val3 : '' )%>" />
+                </td>
+                <td class="text-center" style="<%-(item.parallel == 1 ? 'background-color: rgba(235, 235, 235, 0.7);' : '')%>">
+                    <input class="standartize_edit_input" onchange="StandartizeEditList.recalcSum(this, '<%-item.id%>');" onkeyup="StandartizeEditList.detectKeyup(event);" style="width:50px;" data-type="4" type="number" step="0.01" min="0" name="val_<%-item.id%>_4" value="<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val4 : '' )%>" />
+                    <input class="standartize_edit_input" onchange="StandartizeEditList.recalcSum(this, '<%-item.id%>');" onkeyup="StandartizeEditList.detectKeyup(event);" style="width:55px;" data-type="5" type="number" step="0.01" min="0" name="val_<%-item.id%>_5" value="<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val5 : '' )%>" />
+                </td>
+                <td class="text-center">
+                    <nobr><span class="sum1"><%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val6 : '' )%></span></nobr>
+                    <input data-type="6" type="hidden" name="val_<%-item.id%>_6" value="<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val6 : '' )%>" />
+                </td>
+                <td class="text-right">
+                    <nobr>
+                        <span class="sum2">
+                        <% if (data != null && typeof data[item.id] != 'undefined') { %>
+                            <%- format(parseFloat(data[item.id].val7), 2, 3, ' ', ',') %> руб.
+                        <% } %>
+                        </span>
+                    </nobr>
+                    <input data-type="7" type="hidden" name="val_<%-item.id%>_7" value="<%-(data != null && typeof data[item.id] != 'undefined' ? data[item.id].val7 : '' )%>" />
+                </td>
+            <% } else { %>
+                <td colspan="5">
+                    
+                </td>
+            <% } %>
+        <% } else { %>
+        <td class="text-right">
+            <nobr>
+                <span class="sum2_group">
+                    <% if (parseFloat(item.childsum[6]) > 0) { %>
+                        <%- format(parseFloat(item.childsum[6]), 2, 3, ' ', ',') %> руб.
+                    <% } %>
+                </span>
+            </nobr>
+        </td>
+        <% } %>
+    </tr>
+    <%
+        if (item.childs.length > 0) { 
+            for (let j in item.childs) {
+    %>
+        <%- include('edit_cats_inner', {items:items, item:items[item.childs[j]], section:section}) %>
+    <%
+            }
+        }
+    %>

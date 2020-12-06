@@ -1,0 +1,30 @@
+<% 
+    let types = ['','Текстовое значение','Целое число', 'Число с плавающей запятой', 'Переключатель (да/нет)','Дата','Список', 'Габариты (ВхШхГ)','Процент (0 - 100) %','Группа'];
+%>
+<tr class="specs__list" data-id="<%= item.id %>" data-group="<%= item.group %>">
+    <td width="40" class="text-center specs__list_order">
+        <% if (access.includes('ol:editSpecs')) { %>
+            <div class="drag_sortable show_on_hover"></div>
+        <% } %>
+        <span><%= section.order %>.<%= item.order %>.</span>
+    </td>
+    <% if (access.includes('ol:editSpecs')) { %>
+    <td width="30" class="text-center">
+        <a title="Редактировать наименование характеристики" href="/ol/specs/<%=template.id%>/<%=section.id%>/edit/<%=item.id%>" rel="modal:open"><i class="fas fa-pencil-alt"></i></a>
+    </td>
+    <% } %>
+    <td class="text-left">
+        <div><% if (item.type == 9) { %><a onclick="Tabs.sameTab('/ol/specs/<%=template.id%>/<%=section.id%>/group/<%=item.id%>');return false;" href="#"><%= item.name %></a><% } else { %><%= item.name %><% } %></div>
+        <small><%- types[item.type] %></small>
+    </td>
+    <td class="text-left">
+        <% if (access.includes('ol:editSpecs')) { %>
+            <%- include('params/type_'+item.type, {item:item, values:params_values_data[item.id]}) %>
+        <% } %>
+    </td>
+    <% if (access.includes('ol:deleteSpecs')) { %>
+    <td class="text-center">
+        <a title="Удалить характеристику" href="#" onclick="OlSpecs.deleteSpec('<%= template.id %>','<%= section.id %>','<%= item.id %>'); return false;"><i class="fa fa-trash text-danger"></i></a>
+    </td>
+    <% } %>
+</tr> 

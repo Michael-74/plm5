@@ -1,0 +1,56 @@
+<div class="modal-header">
+    <h4 class="modal-title text-left"><i class="fal fa-user-edit modal-icon"></i>&nbsp;Редактирование роли</h4>
+</div>
+<div class="modal-body">
+    <div class="tabs-container">
+        <form method="POST" action="/users/groups/edit/<%=item.id%>" id="groups__edit_form">
+            <div class="form-group">
+                <label>Наименование</label> <input value="<%=item.name%>" name="name" type="text" class="form-control">
+                <span class="help-block">Например: <i>Администратор</i></span>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                    <button type="submit" class="btn btn-success">Сохранить </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('#groups__edit_form').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    success: function(data) {
+                        $.modal.close();
+                        if (data.ok === true) {
+                            swal({
+                                title: "Отлично!",
+                                text: "Роль успешно отредактирована!",
+                                type: "success"
+                            }, function () {
+                                Tabs._updateCurrent();
+                            });
+                        } else {
+                            swal("Опачки!", "Что-то пошло не так :)", "error");
+                        }
+                    }
+                });
+            },
+            rules: {
+                name: {
+                    required: true,
+                },
+                description: {
+                    required: true
+                }
+            }
+        })
+
+
+
+
+    });
+</script>

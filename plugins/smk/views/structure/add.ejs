@@ -1,0 +1,51 @@
+<div class="modal-header">
+        <h4 class="modal-title text-left">Добавление раздела</h4>
+    </div>
+    <div class="modal-body">
+        <div class="tabs-container">
+            <form method="POST" action="/smk/structure/add" id="smk-section__add_form">
+                <div class="form-group">
+                    <label>Наименование раздела</label>
+                    <input type="text" value="" name="name" required="required" />
+                    <span class="help-block">Например: <i>Отдел системы менеджмента качества</i></span>
+                </div>
+    
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <a href="#" class="btn btn-white" rel="modal:close">Закрыть</a>
+                        <button type="submit" class="btn btn-success">Добавить </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        $(function(){
+            $('#smk-section__add_form').validate({
+                submitHandler: function(form) {
+                    $(form).ajaxSubmit({
+                        success: function(data) {
+                            $.modal.close();
+                            if (data.ok == true) {
+                                swal({
+                                    title: "Отлично!",
+                                    text: "Новый раздел создан!",
+                                    type: "success"
+                                }, function () {
+                                    Tabs.refreshTab(Tabs._currentTabId());
+                                });
+                            } else {
+                                swal("Опачки!", "Что-то пошло не так :)", "error");
+                            }
+                        }
+                    });
+                },
+                rules: {
+                    name: {
+                        required: true,
+                    }
+                }
+            });
+        });
+    </script>

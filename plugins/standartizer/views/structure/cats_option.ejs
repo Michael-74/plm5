@@ -1,0 +1,14 @@
+<option value="<%=item.id%>"><%=add%><%-item.levels.join('.')+'.'%> <%=item.name%></option>
+<%
+if (item.childs.length > 0) {
+    let nadd = add+' — ';
+    for (let j in item.childs) {
+%>
+    <%- include('cats_option', {items:items, item:items[item.childs[j]], add:nadd}) %>
+<%
+    }
+} else {
+
+}
+%>
+ 

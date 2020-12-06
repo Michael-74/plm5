@@ -1,0 +1,29 @@
+<tr class="sections__list" data-id="<%= item.id %>">
+    <td class="text-center sections__list_order">
+        <% if (access.includes('ol:editSections')) { %>
+        <div class="drag_sortable show_on_hover"></div>
+        <% } %>
+        <span><%= item.order %>.</span>
+    </td>
+    <% if (access.includes('ol:editSections')) { %>
+    <td class="text-center">
+        <a title="Редактировать раздел" href="/ol/sections/<%=template.id%>/edit/<%=item.id%>" rel="modal:open"><i class="fas fa-pencil-alt"></i></a>
+    </td>
+    <% } %>
+    <td class="text-left">
+        <% if (access.includes('ol:viewSpecs')) { %>
+        <a onclick="Tabs.sameTab('/ol/specs/<%=template.id%>/<%=item.id%>');return false;" href="#"><%=item.name%></a>
+        <% } else { %>
+            <%=item.name%>
+        <% } %>
+    </td>
+    <% if (access.includes('ol:editSections')) { %>
+    <td class="text-center"><input type="color" <%- (item.color?'value="'+item.color+'"':'') %> onchange="OlSections.changeColor(this, '<%= item.id %>', '<%=template.id%>'); return false;" class="ol_input_color" /> </td>
+    <% } %>
+    <% if (access.includes('ol:deleteSections')) { %>
+    <td class="text-center">
+        <a title="Удалить раздел" href="#" onclick="OlSections.deleteSection('<%= item.id %>', '<%=template.id%>'); return false;"><i class="fa fa-trash text-danger"></i></a>
+    </td>
+    <% } %>
+</tr>
+            
